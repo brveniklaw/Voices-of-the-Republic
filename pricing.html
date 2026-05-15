@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Site Licenses — Voices of the Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:#06091A;color:#F0E8D8;font-family:'EB Garamond',Georgia,serif;overflow-x:hidden;}
+:root{--red:#B8202E;--red2:#D42535;--gold:#C9A84C;--navy:#06091A;--navy2:#0A0F2E;--white:#F5EDD8;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(6,9,26,0.97);border-bottom:1px solid rgba(184,32,46,0.2);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:4px;color:var(--white);}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:rgba(240,232,216,0.5);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:var(--red);}
+.nav-cta{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:var(--white);background:var(--red);border:none;padding:10px 24px;cursor:pointer;text-transform:uppercase;clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);text-decoration:none;}
+
+/* HERO */
+.hero{text-align:center;padding:96px 24px 80px;background:linear-gradient(180deg,rgba(6,9,26,0.3),rgba(6,9,26,0.98)),url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg/1280px-Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg') center/cover no-repeat;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;color:var(--red);text-transform:uppercase;margin-bottom:20px;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(36px,6vw,80px);font-weight:900;color:var(--white);line-height:1;margin-bottom:12px;}
+.hero-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(16px,2.5vw,24px);color:var(--gold);margin-bottom:32px;}
+.hero-rule{width:140px;height:2px;margin:0 auto 32px;background:linear-gradient(to right,transparent,var(--red) 30%,var(--white) 50%,var(--red) 70%,transparent);}
+.hero-desc{font-size:clamp(16px,2vw,19px);color:rgba(240,232,216,0.7);max-width:640px;margin:0 auto;line-height:1.85;}
+
+/* SECTION */
+.section{padding:80px 48px;max-width:1300px;margin:0 auto;}
+.section-hd{text-align:center;margin-bottom:64px;}
+.eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:7px;color:var(--red);text-transform:uppercase;margin-bottom:14px;}
+.section-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,48px);font-weight:700;color:var(--white);margin-bottom:14px;}
+.section-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:rgba(240,232,216,0.5);}
+
+/* INDIVIDUAL PRICING */
+.individual-card{max-width:480px;margin:0 auto 80px;text-align:center;border:1px solid rgba(201,168,76,0.3);padding:56px 48px;background:linear-gradient(135deg,rgba(10,15,46,0.9),rgba(6,9,26,0.95));position:relative;}
+.individual-card::before{content:'MOST POPULAR';position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;background:var(--gold);color:var(--navy);padding:5px 20px;text-transform:uppercase;}
+.price-tag{font-family:'Cinzel',serif;font-size:clamp(52px,8vw,96px);font-weight:900;color:var(--white);line-height:1;}
+.price-tag sup{font-size:40%;vertical-align:top;margin-top:12px;color:var(--red);}
+.price-period{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:rgba(240,232,216,0.4);text-transform:uppercase;margin-bottom:20px;}
+.price-features{display:flex;flex-direction:column;gap:10px;margin:24px 0 36px;text-align:left;}
+.price-feature{font-size:16px;color:rgba(240,232,216,0.7);display:flex;align-items:center;gap:10px;}
+.price-feature::before{content:'★';color:var(--red);font-size:10px;flex-shrink:0;}
+.btn-gold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:var(--navy);background:var(--gold);border:none;padding:18px 56px;cursor:pointer;text-transform:uppercase;transition:all 0.3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);text-decoration:none;display:inline-block;}
+.btn-gold:hover{background:#F5EDD8;box-shadow:0 8px 32px rgba(201,168,76,0.4);}
+.btn-red{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:var(--white);background:var(--red);border:none;padding:18px 56px;cursor:pointer;text-transform:uppercase;transition:all 0.3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);text-decoration:none;display:inline-block;}
+.btn-red:hover{background:#8B1220;}
+.free-note{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:rgba(201,168,76,0.6);text-transform:uppercase;margin-top:16px;}
+
+/* PRICING GRID */
+.pricing-tabs{display:flex;border-bottom:1px solid rgba(184,32,46,0.2);margin-bottom:48px;justify-content:center;}
+.tab-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;background:none;border:none;border-bottom:3px solid transparent;padding:14px 40px;cursor:pointer;color:rgba(240,232,216,0.5);transition:all 0.25s;}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+.tiers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.tier-card{border:1px solid rgba(184,32,46,0.15);background:#0A0F2E;padding:40px 32px;display:flex;flex-direction:column;gap:14px;transition:all 0.35s;position:relative;}
+.tier-card:hover{border-color:rgba(184,32,46,0.5);transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,0.5);}
+.tier-card.featured{border-color:rgba(201,168,76,0.4);background:linear-gradient(135deg,#0A0F2E,#0D1440);}
+.tier-card.featured::after{content:'BEST VALUE';position:absolute;top:-1px;right:24px;font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;background:var(--gold);color:var(--navy);padding:4px 12px;}
+.tier-name{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--white);}
+.tier-size{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:var(--red);text-transform:uppercase;}
+.tier-price{font-family:'Cinzel',serif;font-size:38px;font-weight:900;color:var(--white);line-height:1;}
+.tier-price span{font-size:18px;color:rgba(240,232,216,0.5);font-weight:400;}
+.tier-price .custom{font-size:22px;color:var(--gold);}
+.tier-desc{font-family:'EB Garamond',serif;font-size:15px;color:rgba(240,232,216,0.55);line-height:1.65;flex:1;}
+.tier-divider{height:1px;background:rgba(184,32,46,0.15);}
+.tier-includes{display:flex;flex-direction:column;gap:8px;}
+.tier-include{font-size:14px;color:rgba(240,232,216,0.6);display:flex;gap:8px;align-items:flex-start;}
+.tier-include::before{content:'✓';color:var(--gold);flex-shrink:0;font-size:13px;}
+.tier-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;padding:13px;border:1px solid rgba(184,32,46,0.4);background:none;color:rgba(240,232,216,0.7);transition:all 0.25s;margin-top:8px;}
+.tier-btn:hover{background:var(--red);color:var(--white);border-color:var(--red);}
+.tier-btn.gold{border-color:rgba(201,168,76,0.5);color:var(--gold);}
+.tier-btn.gold:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+
+/* COMPARISON TABLE */
+.compare-table{width:100%;border-collapse:collapse;margin-top:48px;}
+.compare-table th{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--red);padding:16px 20px;border-bottom:2px solid rgba(184,32,46,0.2);text-align:left;}
+.compare-table th:first-child{width:35%;}
+.compare-table td{font-family:'EB Garamond',serif;font-size:16px;color:rgba(240,232,216,0.7);padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.compare-table tr:hover td{background:rgba(184,32,46,0.04);}
+.compare-table td.check{color:var(--gold);font-size:18px;}
+.compare-table td.cross{color:rgba(240,232,216,0.25);}
+
+/* INQUIRY FORM */
+.inquiry-section{background:linear-gradient(135deg,var(--navy2),#0D1440);border-top:1px solid rgba(201,168,76,0.1);padding:80px 48px;}
+.inquiry-inner{max-width:720px;margin:0 auto;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:var(--red);text-transform:uppercase;}
+.form-input,.form-select,.form-textarea{background:rgba(255,255,255,0.04);border:1px solid rgba(184,32,46,0.25);border-bottom:2px solid rgba(184,32,46,0.5);color:var(--white);font-family:'EB Garamond',serif;font-size:17px;padding:14px 18px;outline:none;transition:all 0.3s;width:100%;}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(240,232,216,0.25);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--red);background:rgba(184,32,46,0.03);}
+.form-select option{background:#0A0F2E;color:var(--white);}
+.form-textarea{resize:vertical;min-height:100px;}
+.form-submit{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:var(--white);background:var(--red);border:none;padding:18px 56px;cursor:pointer;text-transform:uppercase;transition:all 0.3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);margin-top:8px;}
+.form-submit:hover{background:#8B1220;box-shadow:0 8px 32px rgba(184,32,46,0.4);}
+.form-submit:disabled{opacity:0.4;cursor:not-allowed;}
+.form-success{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-top:16px;display:none;}
+.form-err{font-size:14px;color:#ff6b6b;margin-top:8px;display:none;}
+
+/* FOOTER */
+footer{background:#030509;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border-top:1px solid rgba(184,32,46,0.15);}
+.footer-logo{font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;color:rgba(240,232,216,0.5);}
+.footer-copy{font-family:'EB Garamond',serif;font-size:13px;color:rgba(240,232,216,0.25);text-align:center;}
+
+@media(max-width:768px){nav{padding:16px 20px;}.nav-links{display:none;}.section{padding:60px 20px;}.form-grid{grid-template-columns:1fr;}.inquiry-section{padding:60px 20px;}.tiers-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">★ Voices of the Republic</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/app">Launch App</a>
+    <a href="/pricing">Licensing</a>
+  </div>
+  <a href="/app" class="nav-cta">Free Access</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Institutional Licensing</div>
+  <h1 class="hero-title">Site Licenses</h1>
+  <div class="hero-sub">Schools, Districts, Organizations & Civic Institutions</div>
+  <div class="hero-rule"></div>
+  <p class="hero-desc">
+    Bring the Founding Fathers into every classroom, every boardroom, every civics program.
+    Annual site licenses include unlimited users, admin tools, progress tracking, and dedicated support.
+  </p>
+</section>
+
+<!-- INDIVIDUAL PRICING -->
+<section class="section">
+  <div class="section-hd">
+    <div class="eyebrow">Individual Access</div>
+    <h2 class="section-title">For Personal Use</h2>
+    <p class="section-sub">Students, families, and every curious citizen</p>
+  </div>
+  <div class="individual-card">
+    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:6px;color:rgba(201,168,76,0.7);text-transform:uppercase;margin-bottom:16px">Free Through July 4, 2026</div>
+    <div class="price-tag"><sup>$</sup>9<span style="font-size:50%">.99</span></div>
+    <div class="price-period">One-Time · Lifetime Access</div>
+    <div class="price-features">
+      <div class="price-feature">All 6 Founding Fathers — unlimited questions</div>
+      <div class="price-feature">19 Federalist Papers — full lesson library</div>
+      <div class="price-feature">Full Constitution — all 7 Articles + Amendments</div>
+      <div class="price-feature">Voice AI — hear each Founder speak</div>
+      <div class="price-feature">All future updates included</div>
+    </div>
+    <a href="/app" class="btn-gold">Start Free Now</a>
+    <div class="free-note">★ Free through July 4, 2026 · Then $9.99 one-time ★</div>
+  </div>
+
+  <!-- SITE LICENSE TABS -->
+  <div class="section-hd">
+    <div class="eyebrow">Site Licenses</div>
+    <h2 class="section-title">For Schools, Districts & Organizations</h2>
+    <p class="section-sub">Annual licenses · Unlimited users within your tier · Invoicing available</p>
+  </div>
+
+  <div class="pricing-tabs">
+    <button class="tab-btn active" onclick="switchTab('edu')">🎓 Educational</button>
+    <button class="tab-btn" onclick="switchTab('org')">🏛️ Organizations</button>
+  </div>
+
+  <!-- EDUCATIONAL -->
+  <div class="tab-content active" id="tab-edu">
+    <div class="tiers-grid">
+
+      <div class="tier-card">
+        <div class="tier-name">Classroom</div>
+        <div class="tier-size">Up to 35 Students</div>
+        <div class="tier-price">$199 <span>/ year</span></div>
+        <div class="tier-desc">Perfect for a single class. One teacher, one class, full platform access all year.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 35 student accounts</div>
+          <div class="tier-include">1 teacher/admin account</div>
+          <div class="tier-include">Full app access</div>
+          <div class="tier-include">Email support</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('edu_classroom','Classroom','$199/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card featured">
+        <div class="tier-name">School</div>
+        <div class="tier-size">36 – 500 Students</div>
+        <div class="tier-price">$799 <span>/ year</span></div>
+        <div class="tier-desc">Full school deployment. Every student and teacher, history and civics departments, whole-school civics days.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 500 student accounts</div>
+          <div class="tier-include">Unlimited teacher accounts</div>
+          <div class="tier-include">Admin dashboard</div>
+          <div class="tier-include">Priority support + onboarding call</div>
+          <div class="tier-include">Custom school branding</div>
+        </div>
+        <button class="tier-btn gold" onclick="selectTier('edu_school','School','$799/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-name">District</div>
+        <div class="tier-size">501 – 5,000 Students</div>
+        <div class="tier-price">$2,499 <span>/ year</span></div>
+        <div class="tier-desc">District-wide rollout. Every school, every civics class, every student — under one license.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 5,000 student accounts</div>
+          <div class="tier-include">Unlimited admin + teacher accounts</div>
+          <div class="tier-include">District analytics dashboard</div>
+          <div class="tier-include">Dedicated onboarding + training</div>
+          <div class="tier-include">Custom curriculum integration</div>
+          <div class="tier-include">Quarterly check-ins</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('edu_district','District','$2,499/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-name">State / Large District</div>
+        <div class="tier-size">5,000+ Students</div>
+        <div class="tier-price"><span class="custom">Custom Pricing</span></div>
+        <div class="tier-desc">State education departments, large urban districts, and multi-district consortiums. Volume pricing and custom integrations available.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Unlimited accounts</div>
+          <div class="tier-include">Custom LMS integration</div>
+          <div class="tier-include">White-label option</div>
+          <div class="tier-include">Dedicated account manager</div>
+          <div class="tier-include">Custom content development</div>
+          <div class="tier-include">SLA & compliance documentation</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('edu_state','State / Large District','Custom')">Contact Us</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ORGANIZATIONAL -->
+  <div class="tab-content" id="tab-org">
+    <div class="tiers-grid">
+
+      <div class="tier-card">
+        <div class="tier-name">Small Team</div>
+        <div class="tier-size">Up to 25 People</div>
+        <div class="tier-price">$299 <span>/ year</span></div>
+        <div class="tier-desc">Civic organizations, nonprofits, law firms, and small teams who want to build constitutional literacy.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 25 user accounts</div>
+          <div class="tier-include">1 admin account</div>
+          <div class="tier-include">Full app access</div>
+          <div class="tier-include">Email support</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('org_small','Small Team','$299/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card featured">
+        <div class="tier-name">Organization</div>
+        <div class="tier-size">26 – 100 People</div>
+        <div class="tier-price">$699 <span>/ year</span></div>
+        <div class="tier-desc">Mid-size nonprofits, civic leagues, law schools, congressional offices, and policy organizations.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 100 user accounts</div>
+          <div class="tier-include">Admin dashboard + usage reports</div>
+          <div class="tier-include">Priority email support</div>
+          <div class="tier-include">Onboarding session included</div>
+          <div class="tier-include">Custom organization branding</div>
+        </div>
+        <button class="tier-btn gold" onclick="selectTier('org_mid','Organization','$699/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-size">101 – 500 People</div>
+        <div class="tier-price">$1,499 <span>/ year</span></div>
+        <div class="tier-desc">Large nonprofits, foundations, law firms, corporations with civic education programs, and government agencies.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Up to 500 user accounts</div>
+          <div class="tier-include">Full admin + analytics suite</div>
+          <div class="tier-include">Dedicated onboarding + training</div>
+          <div class="tier-include">Custom content integration</div>
+          <div class="tier-include">Phone + email support</div>
+          <div class="tier-include">Quarterly business reviews</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('org_large','Enterprise','$1,499/year')">Request Quote</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-name">Large Enterprise</div>
+        <div class="tier-size">500+ People</div>
+        <div class="tier-price"><span class="custom">Custom Pricing</span></div>
+        <div class="tier-desc">National organizations, foundations, federal agencies, and large corporations with enterprise civic education needs.</div>
+        <div class="tier-divider"></div>
+        <div class="tier-includes">
+          <div class="tier-include">Unlimited user accounts</div>
+          <div class="tier-include">SSO / SAML integration</div>
+          <div class="tier-include">White-label deployment</div>
+          <div class="tier-include">Dedicated account manager</div>
+          <div class="tier-include">Custom API access</div>
+          <div class="tier-include">MSA & compliance documentation</div>
+        </div>
+        <button class="tier-btn" onclick="selectTier('org_enterprise','Large Enterprise','Custom')">Contact Us</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div style="margin-top:80px">
+    <h3 style="font-family:'Cinzel',serif;font-size:24px;color:var(--white);text-align:center;margin-bottom:8px;">What's Included</h3>
+    <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(240,232,216,0.45);text-align:center;margin-bottom:0;">All tiers include the complete platform</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Individual</th>
+          <th>Classroom</th>
+          <th>School+</th>
+          <th>District+</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>All 6 Founding Fathers</td><td class="check">★</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Federalist Papers Library (19 lessons)</td><td class="check">★</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Constitution Lesson Library</td><td class="check">★</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Voice AI (hear the Founders)</td><td class="check">★</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Primary Source Citations</td><td class="check">★</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Multi-user Accounts</td><td class="cross">—</td><td class="check">★</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Admin Dashboard</td><td class="cross">—</td><td class="cross">—</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Usage Analytics</td><td class="cross">—</td><td class="cross">—</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Custom Branding</td><td class="cross">—</td><td class="cross">—</td><td class="check">★</td><td class="check">★</td></tr>
+        <tr><td>Dedicated Support</td><td class="cross">—</td><td class="cross">—</td><td class="cross">—</td><td class="check">★</td></tr>
+        <tr><td>Curriculum Integration</td><td class="cross">—</td><td class="cross">—</td><td class="cross">—</td><td class="check">★</td></tr>
+        <tr><td>White-label Option</td><td class="cross">—</td><td class="cross">—</td><td class="cross">—</td><td>Enterprise only</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- INQUIRY FORM -->
+<section class="inquiry-section" id="inquiry">
+  <div class="inquiry-inner">
+    <div class="section-hd">
+      <div class="eyebrow">Get a Quote</div>
+      <h2 class="section-title">Request a Site License</h2>
+      <p class="section-sub">We'll respond within 1–2 business days with your formal quote and invoice</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Your Name *</label>
+        <input class="form-input" id="f-name" type="text" placeholder="Full name" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input class="form-input" id="f-email" type="email" placeholder="work@institution.edu" required/>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Institution / Organization Name</label>
+        <input class="form-input" id="f-inst" type="text" placeholder="School, district, or organization name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Institution Type</label>
+        <select class="form-select" id="f-type">
+          <option value="">Select type...</option>
+          <option value="k12">K-12 School</option>
+          <option value="district">School District</option>
+          <option value="university">College / University</option>
+          <option value="homeschool">Homeschool Co-op</option>
+          <option value="nonprofit">Nonprofit / Civic Org</option>
+          <option value="government">Government Agency</option>
+          <option value="lawfirm">Law Firm</option>
+          <option value="corporation">Corporation</option>
+          <option value="library">Library / Public Institution</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Users / Students</label>
+        <input class="form-input" id="f-size" type="number" placeholder="e.g. 250" min="1"/>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">License Tier (pre-selected or choose)</label>
+        <select class="form-select" id="f-tier">
+          <option value="">I'll let you recommend...</option>
+          <optgroup label="Educational">
+            <option value="edu_classroom">Classroom — Up to 35 students — $199/yr</option>
+            <option value="edu_school">School — Up to 500 students — $799/yr</option>
+            <option value="edu_district">District — Up to 5,000 students — $2,499/yr</option>
+            <option value="edu_state">State / Large District — 5,000+ — Custom</option>
+          </optgroup>
+          <optgroup label="Organizational">
+            <option value="org_small">Small Team — Up to 25 — $299/yr</option>
+            <option value="org_mid">Organization — Up to 100 — $699/yr</option>
+            <option value="org_large">Enterprise — Up to 500 — $1,499/yr</option>
+            <option value="org_enterprise">Large Enterprise — 500+ — Custom</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Message (Optional)</label>
+        <textarea class="form-textarea" id="f-message" placeholder="Tell us about your use case, timeline, or any questions..."></textarea>
+      </div>
+      <div class="form-group full">
+        <button class="form-submit" id="f-submit" onclick="submitInquiry()">Send Inquiry →</button>
+        <div class="form-success" id="f-success">★ &nbsp; Thank you! We'll be in touch within 1–2 business days with your quote.</div>
+        <div class="form-err" id="f-err"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">★ Voices of the Republic</div>
+  <div class="footer-copy">Powered by IntexiaU · America's 250th Anniversary · 1776–2026</div>
+  <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:rgba(184,32,46,0.5);">★ ★ ★</div>
+</footer>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='edu')||(i===1&&tab==='org')));
+  document.getElementById('tab-edu').classList.toggle('active', tab==='edu');
+  document.getElementById('tab-org').classList.toggle('active', tab==='org');
+}
+
+function selectTier(key, label, price) {
+  document.getElementById('f-tier').value = key;
+  document.getElementById('inquiry').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => document.getElementById('f-name').focus(), 600);
+}
+
+async function submitInquiry() {
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const inst  = document.getElementById('f-inst').value.trim();
+  const type  = document.getElementById('f-type').value;
+  const size  = parseInt(document.getElementById('f-size').value) || null;
+  const tier  = document.getElementById('f-tier').value;
+  const msg   = document.getElementById('f-message').value.trim();
+  const err   = document.getElementById('f-err');
+  const succ  = document.getElementById('f-success');
+  const btn   = document.getElementById('f-submit');
+
+  err.style.display = 'none'; succ.style.display = 'none';
+  if (!name) { err.textContent = 'Please enter your name.'; err.style.display='block'; return; }
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email.'; err.style.display='block'; return; }
+
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try {
+    const res  = await fetch('/api/license-inquiry', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ contact_name:name, contact_email:email, institution:inst, inst_type:type, size, tier_key:tier, message:msg })
+    });
+    const data = await res.json();
+    if (data.success) {
+      succ.style.display = 'block';
+      btn.textContent = '✓ Sent';
+      document.getElementById('f-name').value='';
+      document.getElementById('f-email').value='';
+      document.getElementById('f-inst').value='';
+      document.getElementById('f-message').value='';
+    } else {
+      err.textContent = data.error || 'Submission failed. Please try again.';
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Send Inquiry →';
+    }
+  } catch {
+    err.textContent = 'Connection error. Please try again.';
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Send Inquiry →';
+  }
+}
+</script>
+</body>
+</html>

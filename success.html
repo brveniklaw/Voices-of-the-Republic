@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Access Confirmed — Voices of the Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#06091A;color:#F0E8D8;font-family:'EB Garamond',Georgia,serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
+.card{max-width:560px;padding:72px 56px;border:1px solid rgba(201,168,76,0.3);background:linear-gradient(135deg,#0A0F2E,#06091A);}
+.stars{font-size:12px;letter-spacing:10px;color:#B8202E;margin-bottom:32px;}
+.flag{font-size:56px;margin-bottom:24px;display:block;animation:wave 1.5s ease-in-out infinite;}
+@keyframes wave{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+.title{font-family:'Cinzel',serif;font-size:clamp(28px,5vw,52px);font-weight:900;color:#F5EDD8;line-height:1;margin-bottom:12px;}
+.subtitle{font-family:'EB Garamond',serif;font-style:italic;font-size:20px;color:#C9A84C;margin-bottom:32px;}
+.rule{width:100px;height:1px;margin:0 auto 32px;background:linear-gradient(to right,transparent,#B8202E,transparent);}
+.message{font-size:18px;color:rgba(240,232,216,0.75);line-height:1.85;margin-bottom:40px;}
+.launch-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:#F5EDD8;background:#B8202E;border:none;padding:18px 56px;cursor:pointer;text-transform:uppercase;text-decoration:none;display:inline-block;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.3s;}
+.launch-btn:hover{background:#8B1220;box-shadow:0 8px 32px rgba(184,32,46,0.5);}
+.note{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:rgba(201,168,76,0.5);text-transform:uppercase;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="stars">★ ★ ★ ★ ★</div>
+  <span class="flag">🇺🇸</span>
+  <h1 class="title">Welcome, Patriot.</h1>
+  <div class="subtitle">Lifetime Access Confirmed</div>
+  <div class="rule"></div>
+  <p class="message">
+    Your payment was successful. You now have <strong>lifetime access</strong> to all six Founding Fathers,
+    the complete Federalist Papers lesson library, and the full Constitution —
+    all grounded in primary sources.<br/><br/>
+    Check your email for your access link and token.
+  </p>
+  <a href="/app" class="launch-btn" id="launch-link">🇺🇸 &nbsp;Launch the App Now</a>
+  <div class="note">★ &nbsp; Receipt sent to your email &nbsp; ★</div>
+</div>
+<script>
+// Append token to app link if in localStorage
+const t = localStorage.getItem('votr_access_token');
+if (t) document.getElementById('launch-link').href = '/app?token=' + t;
+</script>
+</body>
+</html>

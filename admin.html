@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin — Voices of the Republic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#06091A;color:#F0E8D8;font-family:'EB Garamond',Georgia,serif;padding:0;}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-card{width:100%;max-width:400px;padding:56px 48px;border:1px solid rgba(184,32,46,0.3);background:#0A0F2E;text-align:center;}
+.login-title{font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:#F5EDD8;margin-bottom:24px;}
+.login-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(184,32,46,0.3);border-bottom:2px solid rgba(184,32,46,0.6);color:#F0E8D8;font-family:'EB Garamond',serif;font-size:18px;padding:14px 18px;outline:none;margin-bottom:16px;}
+.login-btn{width:100%;font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;color:#F5EDD8;background:#B8202E;border:none;padding:16px;cursor:pointer;text-transform:uppercase;}
+.login-err{font-size:14px;color:#ff6b6b;margin-top:10px;}
+.dashboard{display:none;min-height:100vh;}
+.dash-nav{background:#030509;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(184,32,46,0.2);}
+.dash-nav-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:#F5EDD8;}
+.dash-nav-logout{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:rgba(184,32,46,0.7);cursor:pointer;background:none;border:none;text-transform:uppercase;}
+.dash-body{padding:40px 32px;max-width:1400px;margin:0 auto;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:48px;}
+.stat-card{background:#0A0F2E;border:1px solid rgba(184,32,46,0.15);padding:28px 24px;text-align:center;}
+.stat-num{font-family:'Cinzel',serif;font-size:48px;font-weight:900;color:#F5EDD8;line-height:1;}
+.stat-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:#B8202E;text-transform:uppercase;margin-top:6px;}
+.stat-card.gold .stat-num{color:#C9A84C;}
+.section-title{font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:#F5EDD8;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(184,32,46,0.2);}
+table{width:100%;border-collapse:collapse;margin-bottom:48px;font-size:15px;}
+th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#B8202E;padding:10px 14px;text-align:left;border-bottom:1px solid rgba(184,32,46,0.2);}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(240,232,216,0.75);}
+tr:hover td{background:rgba(184,32,46,0.04);}
+.badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;padding:3px 8px;text-transform:uppercase;}
+.badge.paid{background:rgba(201,168,76,0.2);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);}
+.badge.free{background:rgba(184,32,46,0.15);color:#B8202E;border:1px solid rgba(184,32,46,0.25);}
+.action-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:#F5EDD8;background:#B8202E;border:none;padding:12px 24px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;margin-bottom:24px;}
+.action-btn:hover{background:#8B1220;}
+.action-btn.gold{background:#C9A84C;color:#06091A;}
+.action-btn.gold:hover{background:#F5EDD8;}
+.loading{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:rgba(184,32,46,0.6);padding:40px;text-align:center;}
+.status-bar{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:10px 16px;margin-bottom:16px;}
+.status-bar.free-period{background:rgba(201,168,76,0.1);color:#C9A84C;border:1px solid rgba(201,168,76,0.25);}
+.status-bar.paid-period{background:rgba(184,32,46,0.1);color:#B8202E;border:1px solid rgba(184,32,46,0.25);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-title">Admin Access</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:rgba(240,232,216,0.4);margin-bottom:28px;">Voices of the Republic</div>
+    <input class="login-input" id="admin-key" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Enter</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-nav">
+    <div class="dash-nav-title">★ Voices of the Republic — Admin</div>
+    <button class="dash-nav-logout" onclick="logout()">Log Out</button>
+  </div>
+  <div class="dash-body">
+    <div id="status-bar-container"></div>
+    <div class="stats-row" id="stats-row"><div class="loading">Loading stats...</div></div>
+    <button class="action-btn" onclick="loadSubscribers()">↻ Refresh Subscribers</button>
+    <button class="action-btn gold" onclick="notifyPaidLaunch()" id="notify-btn">📧 Send Paid Launch Notification to All Free Users</button>
+    <div class="section-title">Subscribers</div>
+    <div id="subscribers-table"><div class="loading">Loading...</div></div>
+    <div class="section-title">License Inquiries</div>
+    <div id="licenses-table"><div class="loading">Loading...</div></div>
+  </div>
+</div>
+
+<script>
+let ADMIN_KEY = '';
+
+function doLogin() {
+  const key = document.getElementById('admin-key').value.trim();
+  if (!key) return;
+  ADMIN_KEY = key;
+  loadDashboard();
+}
+
+async function loadDashboard() {
+  try {
+    const res  = await fetch('/api/admin/stats', { headers: { 'x-admin-key': ADMIN_KEY } });
+    if (res.status === 401) { document.getElementById('login-err').textContent = 'Incorrect password.'; return; }
+    const data = await res.json();
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    // Status bar
+    const sb = document.getElementById('status-bar-container');
+    sb.innerHTML = `<div class="status-bar ${data.is_free_period ? 'free-period' : 'paid-period'}">
+      ${data.is_free_period ? `★ Free Period Active — ends ${new Date(data.free_until).toLocaleDateString()}` : '★ Paid Period Active — app requires $9.99 purchase'}
+    </div>`;
+
+    // Stats
+    document.getElementById('stats-row').innerHTML = `
+      <div class="stat-card"><div class="stat-num">${data.total_subscribers}</div><div class="stat-label">Total Subscribers</div></div>
+      <div class="stat-card gold"><div class="stat-num">${data.paid_users}</div><div class="stat-label">Paid Users</div></div>
+      <div class="stat-card"><div class="stat-num">${data.free_users}</div><div class="stat-label">Free Users</div></div>
+      <div class="stat-card"><div class="stat-num">${data.license_inquiries}</div><div class="stat-label">License Inquiries</div></div>
+    `;
+    loadSubscribers();
+    loadLicenses();
+  } catch (e) {
+    document.getElementById('login-err').textContent = 'Connection error. Is the server running?';
+  }
+}
+
+async function loadSubscribers() {
+  const res  = await fetch('/api/admin/subscribers', { headers: { 'x-admin-key': ADMIN_KEY } });
+  const data = await res.json();
+  const rows = data.subscribers.map(s => `
+    <tr>
+      <td>${s.id}</td>
+      <td>${s.name || '—'}</td>
+      <td>${s.email}</td>
+      <td><span class="badge ${s.paid ? 'paid' : 'free'}">${s.paid ? 'Paid' : 'Free'}</span></td>
+      <td>${new Date(s.created_at).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+  document.getElementById('subscribers-table').innerHTML = `
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:rgba(240,232,216,0.3)">No subscribers yet</td></tr>'}</tbody>
+    </table>
+  `;
+}
+
+async function loadLicenses() {
+  const res  = await fetch('/api/admin/licenses', { headers: { 'x-admin-key': ADMIN_KEY } });
+  const data = await res.json();
+  const rows = data.inquiries.map(l => `
+    <tr>
+      <td>${l.id}</td>
+      <td>${l.contact_name}</td>
+      <td>${l.contact_email}</td>
+      <td>${l.institution || '—'}</td>
+      <td>${l.tier_key || '—'}</td>
+      <td>${l.annual_fee ? '$' + Number(l.annual_fee).toLocaleString() : 'Custom'}</td>
+      <td>${new Date(l.created_at).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+  document.getElementById('licenses-table').innerHTML = `
+    <table>
+      <thead><tr><th>#</th><th>Contact</th><th>Email</th><th>Institution</th><th>Tier</th><th>Fee</th><th>Date</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="7" style="text-align:center;color:rgba(240,232,216,0.3)">No inquiries yet</td></tr>'}</tbody>
+    </table>
+  `;
+}
+
+async function notifyPaidLaunch() {
+  if (!confirm('Send the paid-launch notification email to ALL free users? This cannot be undone.')) return;
+  const btn = document.getElementById('notify-btn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  const res  = await fetch('/api/admin/notify-paid-launch', { method: 'POST', headers: { 'x-admin-key': ADMIN_KEY } });
+  const data = await res.json();
+  alert(`✅ Sent to ${data.sent} subscribers.`);
+  btn.disabled = false; btn.textContent = '📧 Send Paid Launch Notification to All Free Users';
+}
+
+function logout() { ADMIN_KEY=''; document.getElementById('login-screen').style.display='flex'; document.getElementById('dashboard').style.display='none'; }
+</script>
+</body>
+</html>
