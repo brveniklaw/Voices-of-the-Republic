@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Voices of the Republic — America's 250th Anniversary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+/* ── RESET & BASE ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #06091A;
+  color: #F0E8D8;
+  font-family: 'EB Garamond', Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* ── CSS VARIABLES ────────────────────────────── */
+:root {
+  --navy:    #06091A;
+  --navy2:   #0A0F2E;
+  --navy3:   #0D1440;
+  --red:     #B8202E;
+  --red2:    #D42535;
+  --red3:    #8B0D18;
+  --gold:    #C9A84C;
+  --white:   #F5F0E8;
+  --parch:   #F0E8D8;
+  --star:    #FFFFFF;
+}
+
+/* ── GRAIN ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── STARS CANVAS ─────────────────────────────── */
+#stars-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+/* ── FIREWORKS CANVAS ─────────────────────────── */
+#fw-canvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+}
+
+/* ── NAV ──────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: linear-gradient(to bottom, rgba(6,9,26,0.98) 0%, rgba(6,9,26,0) 100%);
+  backdrop-filter: blur(2px);
+}
+.nav-logo {
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  letter-spacing: 4px; color: var(--white); text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo-star { color: var(--red); font-size: 10px; }
+.nav-cta {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
+  color: var(--navy); background: var(--red); border: none;
+  padding: 12px 32px; cursor: pointer; text-transform: uppercase;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  text-decoration: none; display: inline-block;
+  transition: background 0.3s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--red2); transform: translateY(-1px); }
+
+/* ── HERO ─────────────────────────────────────── */
+.hero {
+  position: relative; z-index: 2;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 80px;
+  background:
+    linear-gradient(to bottom, rgba(6,9,26,0.4) 0%, rgba(6,9,26,0.7) 60%, var(--navy) 100%),
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg/1280px-Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg')
+    center 30% / cover no-repeat;
+}
+
+/* Stars banner */
+.hero-stars-strip {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+}
+.strip-star { color: var(--red); font-size: 12px; }
+.strip-text {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 8px;
+  color: var(--gold); text-transform: uppercase;
+}
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 24px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+.hero-title {
+  font-family: 'Cinzel', serif; font-weight: 900;
+  font-size: clamp(52px, 10vw, 128px); line-height: 0.9;
+  color: var(--white); margin-bottom: 8px;
+  text-shadow: 0 0 80px rgba(184,32,46,0.35), 3px 8px 40px rgba(0,0,0,0.95);
+  opacity: 0; animation: fadeUp 1s ease forwards 0.7s;
+}
+.hero-title span { color: var(--red); }
+
+.hero-subtitle {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(18px, 3vw, 32px); color: var(--gold); margin-bottom: 48px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 1.1s;
+}
+
+.hero-rule {
+  width: 200px; height: 2px; margin: 0 auto 48px;
+  background: linear-gradient(to right, transparent, var(--red) 30%, var(--white) 50%, var(--red) 70%, transparent);
+  opacity: 0; animation: fadeIn 1s ease forwards 1.4s;
+}
+
+.hero-desc {
+  font-family: 'EB Garamond', serif; font-size: clamp(16px, 2vw, 21px);
+  color: rgba(240,232,216,0.8); max-width: 680px; line-height: 1.9;
+  margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 1.6s;
+}
+
+.hero-free-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px;
+  color: var(--white); text-transform: uppercase;
+  border: 1px solid rgba(201,168,76,0.5); padding: 10px 28px;
+  background: rgba(201,168,76,0.1); margin-bottom: 56px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 1.8s;
+}
+.hero-free-badge .badge-star { color: var(--gold); }
+
+.hero-btns {
+  display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 2s;
+}
+.btn-primary {
+  font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 6px;
+  color: var(--white); background: var(--red);
+  border: none; padding: 22px 72px; cursor: pointer;
+  text-transform: uppercase; text-decoration: none; display: inline-block;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition: all 0.3s ease; box-shadow: 0 8px 40px rgba(184,32,46,0.5);
+}
+.btn-primary:hover { background: var(--red2); transform: translateY(-3px); box-shadow: 0 16px 56px rgba(184,32,46,0.6); }
+.btn-secondary {
+  font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 6px;
+  color: var(--white); background: transparent;
+  border: 2px solid rgba(245,240,232,0.4); padding: 22px 72px; cursor: pointer;
+  text-transform: uppercase; text-decoration: none; display: inline-block;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+/* ── COUNTDOWN ────────────────────────────────── */
+.countdown-section {
+  position: relative; z-index: 2;
+  background: linear-gradient(135deg, var(--red3) 0%, var(--red) 50%, var(--red3) 100%);
+  padding: 72px 24px;
+  text-align: center;
+  border-top: 3px solid rgba(255,255,255,0.15);
+  border-bottom: 3px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+}
+.countdown-section::before {
+  content: '★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★';
+  position: absolute; top: 10px; left: 0; right: 0;
+  font-size: 10px; letter-spacing: 8px; color: rgba(255,255,255,0.18);
+  text-align: center; white-space: nowrap; overflow: hidden;
+}
+.countdown-section::after {
+  content: '★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★';
+  position: absolute; bottom: 10px; left: 0; right: 0;
+  font-size: 10px; letter-spacing: 8px; color: rgba(255,255,255,0.18);
+  text-align: center; white-space: nowrap; overflow: hidden;
+}
+.countdown-eyebrow {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 8px;
+  color: rgba(255,255,255,0.7); text-transform: uppercase; margin-bottom: 10px;
+}
+.countdown-title {
+  font-family: 'Cinzel', serif; font-size: clamp(24px,4vw,48px); font-weight: 900;
+  color: #fff; margin-bottom: 48px; text-shadow: 0 3px 20px rgba(0,0,0,0.4);
+}
+.countdown-title em { font-style: normal; color: var(--gold); }
+.countdown-units {
+  display: flex; justify-content: center; align-items: center; gap: 0; flex-wrap: wrap;
+}
+.cd-block {
+  text-align: center; padding: 28px 40px;
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15);
+  min-width: 120px; position: relative;
+}
+.cd-block:not(:last-child)::after {
+  content: ':';
+  position: absolute; right: -16px; top: 50%; transform: translateY(-60%);
+  font-family: 'Cinzel', serif; font-size: 48px; color: rgba(255,255,255,0.5);
+  z-index: 1;
+}
+.cd-num {
+  font-family: 'Cinzel', serif; font-size: clamp(52px,7vw,96px);
+  font-weight: 900; color: #fff; line-height: 1;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  display: block;
+}
+.cd-label {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+  color: rgba(255,255,255,0.6); text-transform: uppercase;
+  display: block; margin-top: 8px;
+}
+.countdown-sub {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(16px,2vw,22px); color: rgba(255,255,255,0.8);
+  margin-top: 40px;
+}
+
+/* ── FREE BANNER ──────────────────────────────── */
+.free-banner {
+  position: relative; z-index: 2;
+  background: linear-gradient(135deg, var(--navy2), var(--navy3));
+  padding: 80px 24px; text-align: center;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.free-banner-inner { max-width: 800px; margin: 0 auto; }
+.free-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px;
+  background: var(--gold); color: var(--navy);
+  padding: 8px 32px; text-transform: uppercase; margin-bottom: 32px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.free-banner-title {
+  font-family: 'Cinzel', serif; font-size: clamp(28px,5vw,60px); font-weight: 900;
+  color: var(--white); line-height: 1.1; margin-bottom: 24px;
+}
+.free-banner-title .red { color: var(--red); }
+.free-banner-title .gold { color: var(--gold); }
+.free-banner-desc {
+  font-family: 'EB Garamond', serif; font-size: clamp(16px,2vw,20px);
+  color: rgba(240,232,216,0.7); line-height: 1.85; margin-bottom: 40px;
+}
+.free-banner-rule {
+  width: 120px; height: 1px; margin: 0 auto 40px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* ── FEATURES ─────────────────────────────────── */
+.features {
+  position: relative; z-index: 2;
+  padding: 100px 48px; max-width: 1400px; margin: 0 auto;
+}
+.section-hd { text-align: center; margin-bottom: 80px; }
+.section-eyebrow {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 7px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 18px;
+}
+.section-title {
+  font-family: 'Cinzel', serif; font-size: clamp(28px,4vw,52px); font-weight: 700;
+  color: var(--white); line-height: 1.15; margin-bottom: 16px;
+}
+.section-sub {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 19px; color: rgba(240,232,216,0.5);
+}
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2px; background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.12);
+}
+.feature-card {
+  background: var(--navy2); padding: 48px 40px;
+  border: 1px solid rgba(184,32,46,0.08);
+  transition: all 0.4s ease; position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--red3), var(--red), var(--red3));
+  transform: scaleX(0); transition: transform 0.4s ease;
+}
+.feature-card:hover::before { transform: scaleX(1); }
+.feature-card:hover { background: rgba(184,32,46,0.06); transform: translateY(-3px); }
+.feature-icon {
+  font-size: 40px; margin-bottom: 24px; display: block;
+  filter: drop-shadow(0 4px 12px rgba(184,32,46,0.3));
+}
+.feature-title {
+  font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600;
+  color: var(--white); margin-bottom: 14px; line-height: 1.3;
+}
+.feature-desc {
+  font-family: 'EB Garamond', serif; font-size: 17px;
+  color: rgba(240,232,216,0.6); line-height: 1.75;
+}
+.feature-tag {
+  display: inline-block; margin-top: 20px;
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+  color: var(--red); text-transform: uppercase;
+  border-bottom: 1px solid rgba(184,32,46,0.3); padding-bottom: 3px;
+}
+
+/* ── FOUNDERS STRIP ───────────────────────────── */
+.founders-strip {
+  position: relative; z-index: 2;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy3) 50%, var(--navy) 100%);
+  padding: 100px 0; overflow: hidden;
+}
+.founders-strip-inner { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
+.founders-strip-title {
+  font-family: 'Cinzel', serif; font-size: clamp(28px,4vw,52px); font-weight: 700;
+  color: var(--white); text-align: center; margin-bottom: 16px;
+}
+.founders-strip-sub {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 19px; color: rgba(240,232,216,0.5); text-align: center; margin-bottom: 64px;
+}
+.founders-row {
+  display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px;
+  scrollbar-width: thin; scrollbar-color: rgba(184,32,46,0.4) transparent;
+}
+.founder-tile {
+  flex-shrink: 0; width: 200px; position: relative; overflow: hidden;
+  border: 1px solid rgba(184,32,46,0.2); cursor: pointer;
+  transition: all 0.35s ease; background: var(--navy2);
+}
+.founder-tile:hover { border-color: rgba(184,32,46,0.7); transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.6); }
+.founder-img {
+  width: 100%; height: 260px; object-fit: cover; object-position: top;
+  filter: grayscale(40%) sepia(30%) contrast(1.1) brightness(0.82);
+  transition: filter 0.4s ease;
+}
+.founder-tile:hover .founder-img { filter: grayscale(20%) sepia(15%) brightness(0.9); }
+.founder-img-grad {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+  background: linear-gradient(to top, var(--navy2) 0%, transparent 100%);
+}
+.founder-info { padding: 16px 16px 20px; }
+.founder-name { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.founder-role { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: rgba(240,232,216,0.42); }
+
+/* ── FOR WHO ──────────────────────────────────── */
+.for-who {
+  position: relative; z-index: 2;
+  padding: 100px 48px;
+  background: linear-gradient(135deg, var(--navy2) 0%, var(--navy3) 100%);
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.for-who-inner { max-width: 1200px; margin: 0 auto; }
+.for-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px; margin-top: 64px;
+}
+.for-card {
+  padding: 40px 32px; text-align: center;
+  border: 1px solid rgba(201,168,76,0.15);
+  background: rgba(6,9,26,0.6);
+  transition: all 0.35s ease;
+}
+.for-card:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); transform: translateY(-4px); }
+.for-emoji { font-size: 48px; display: block; margin-bottom: 20px; }
+.for-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 12px; }
+.for-desc { font-family: 'EB Garamond', serif; font-size: 16px; color: rgba(240,232,216,0.6); line-height: 1.7; }
+
+/* ── QUOTE BANNER ─────────────────────────────── */
+.quote-banner {
+  position: relative; z-index: 2;
+  padding: 100px 48px; text-align: center;
+  background:
+    linear-gradient(to bottom, rgba(6,9,26,0.85), rgba(6,9,26,0.95)),
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Constitution_of_the_United_States%2C_page_1.jpg/800px-Constitution_of_the_United_States%2C_page_1.jpg')
+    center / cover no-repeat;
+  border-top: 3px solid rgba(184,32,46,0.3);
+  border-bottom: 3px solid rgba(184,32,46,0.3);
+}
+.quote-text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(22px,4vw,52px); color: var(--white); line-height: 1.4;
+  max-width: 900px; margin: 0 auto 32px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.7);
+}
+.quote-text .red { color: var(--red); }
+.quote-attr {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px;
+  color: var(--gold); text-transform: uppercase;
+}
+.quote-rule {
+  width: 80px; height: 2px; margin: 0 auto 32px;
+  background: linear-gradient(to right, transparent, var(--red), transparent);
+}
+
+/* ── LESSONS PROMO ────────────────────────────── */
+.lessons-promo {
+  position: relative; z-index: 2;
+  padding: 100px 48px; max-width: 1400px; margin: 0 auto;
+}
+.lessons-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px;
+}
+.lesson-card {
+  padding: 56px 48px; position: relative; overflow: hidden;
+  border: 1px solid; transition: all 0.4s ease;
+}
+.lesson-card.fed {
+  background: linear-gradient(135deg, rgba(184,32,46,0.12), rgba(139,13,24,0.06));
+  border-color: rgba(184,32,46,0.25);
+}
+.lesson-card.con {
+  background: linear-gradient(135deg, rgba(10,15,46,0.8), rgba(13,20,64,0.9));
+  border-color: rgba(201,168,76,0.2);
+}
+.lesson-card:hover { transform: translateY(-5px); box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+.lesson-card.fed:hover { border-color: rgba(184,32,46,0.6); }
+.lesson-card.con:hover { border-color: rgba(201,168,76,0.5); }
+.lesson-card-num {
+  font-family: 'Cinzel', serif; font-size: 80px; font-weight: 900;
+  position: absolute; top: 20px; right: 32px; line-height: 1;
+  opacity: 0.08; pointer-events: none;
+}
+.lesson-card.fed .lesson-card-num { color: var(--red); }
+.lesson-card.con .lesson-card-num { color: var(--gold); }
+.lesson-icon { font-size: 44px; margin-bottom: 24px; display: block; }
+.lesson-card-title {
+  font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700;
+  color: var(--white); margin-bottom: 16px;
+}
+.lesson-card-count {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+  text-transform: uppercase; margin-bottom: 20px; display: block;
+}
+.lesson-card.fed .lesson-card-count { color: var(--red); }
+.lesson-card.con .lesson-card-count { color: var(--gold); }
+.lesson-card-desc {
+  font-family: 'EB Garamond', serif; font-size: 18px;
+  color: rgba(240,232,216,0.65); line-height: 1.8;
+}
+.lesson-features {
+  margin-top: 28px; display: flex; flex-direction: column; gap: 10px;
+}
+.lesson-feature {
+  font-family: 'EB Garamond', serif; font-size: 16px;
+  color: rgba(240,232,216,0.55); display: flex; align-items: center; gap: 10px;
+}
+.lesson-feature::before { content: '★'; font-size: 10px; flex-shrink: 0; }
+.lesson-card.fed .lesson-feature::before { color: var(--red); }
+.lesson-card.con .lesson-feature::before { color: var(--gold); }
+
+/* ── FINAL CTA ────────────────────────────────── */
+.final-cta {
+  position: relative; z-index: 2;
+  text-align: center; padding: 120px 24px;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy2) 50%, var(--navy) 100%);
+}
+.final-stars {
+  font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 12px;
+  color: var(--red); margin-bottom: 40px; display: block;
+}
+.final-title {
+  font-family: 'Cinzel', serif; font-size: clamp(36px,6vw,80px); font-weight: 900;
+  color: var(--white); line-height: 1; margin-bottom: 12px;
+  text-shadow: 0 0 60px rgba(184,32,46,0.25);
+}
+.final-subtitle {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(18px,2.5vw,28px); color: var(--gold); margin-bottom: 48px;
+}
+.final-rule {
+  width: 160px; height: 2px; margin: 0 auto 48px;
+  background: linear-gradient(to right, transparent, var(--red) 30%, var(--white) 50%, var(--red) 70%, transparent);
+}
+.final-desc {
+  font-family: 'EB Garamond', serif; font-size: clamp(16px,2vw,20px);
+  color: rgba(240,232,216,0.65); max-width: 600px; margin: 0 auto 64px; line-height: 1.85;
+}
+.final-btns { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.final-note {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px;
+  color: rgba(201,168,76,0.6); text-transform: uppercase;
+}
+
+/* ── FOOTER ───────────────────────────────────── */
+footer {
+  position: relative; z-index: 2;
+  background: #030509; padding: 48px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+  border-top: 1px solid rgba(184,32,46,0.2);
+}
+.footer-logo {
+  font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(240,232,216,0.6);
+}
+.footer-copy {
+  font-family: 'EB Garamond', serif; font-size: 14px;
+  color: rgba(240,232,216,0.3); text-align: center;
+}
+.footer-stars {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px;
+  color: rgba(184,32,46,0.5);
+}
+
+/* ── ANIMATIONS ───────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,32,46,0.4); }
+  50%       { box-shadow: 0 0 0 16px rgba(184,32,46,0); }
+}
+@keyframes flagWave {
+  0%, 100% { transform: skewX(0deg) scaleX(1); }
+  25%       { transform: skewX(2deg) scaleX(1.01); }
+  75%       { transform: skewX(-2deg) scaleX(0.99); }
+}
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .features, .founders-strip-inner, .lessons-promo, .for-who { padding: 60px 20px; }
+  .cd-block { padding: 20px 20px; min-width: 80px; }
+  .cd-block:not(:last-child)::after { right: -12px; font-size: 32px; }
+  .lessons-cards { grid-template-columns: 1fr; }
+  .footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<canvas id="fw-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-logo-star">★</span>
+    Voices of the Republic
+    <span class="nav-logo-star">★</span>
+  </div>
+  <a href="/app" class="nav-cta">Start Free Trial</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-stars-strip">
+    <span class="strip-star">★</span>
+    <span class="strip-text">Celebrating 250 Years of American Democracy</span>
+    <span class="strip-star">★</span>
+  </div>
+  <div class="hero-eyebrow">America's Semiquincentennial · 1776 — 2026</div>
+  <h1 class="hero-title">Voices of<br /><span>the Republic</span></h1>
+  <div class="hero-subtitle">The Founding Fathers Speak to the Modern Age</div>
+  <div class="hero-rule"></div>
+  <p class="hero-desc">
+    Start your <strong style="color:#B8202E">7-day free trial</strong> today — in honor of America's 250th Birthday. Ask Hamilton about cryptocurrency. Debate Jefferson on free speech.
+    Let Madison explain why checks and balances still matter. Every answer
+    grounded in primary sources — the actual letters, speeches, and
+    Federalist Papers they wrote.
+  </p>
+  <div class="hero-free-badge">
+    <span class="badge-star">★</span>
+    7-Day Free Trial — In Honor of America's 250th
+    <span class="badge-star">★</span>
+  </div>
+  <div class="hero-btns">
+    <a href="/app" class="btn-primary">🇺🇸 Start Free 7-Day Trial</a>
+    <a href="#learn" class="btn-secondary">Learn More</a>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown-section">
+  <div class="countdown-eyebrow">Days Until America's 250th Birthday</div>
+  <h2 class="countdown-title">July 4, 2026 — <em>Semiquincentennial</em></h2>
+  <div class="countdown-units">
+    <div class="cd-block"><span class="cd-num" id="cd-days">00</span><span class="cd-label">Days</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Hours</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Minutes</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Seconds</span></div>
+  </div>
+  <p class="countdown-sub">The Republic is 250 years old. The Founders have never been more relevant.</p>
+</section>
+
+<!-- FREE BANNER -->
+<section class="free-banner" id="learn">
+  <div class="free-banner-inner">
+    <div class="free-tag">★ Limited Time ★</div>
+    <h2 class="free-banner-title">
+      <span class="red">Completely Free</span><br />
+      Through <span class="gold">July 4th, 2026</span>
+    </h2>
+    <div class="free-banner-rule"></div>
+    <p class="free-banner-desc">
+      Start your <strong>7-day free trial</strong> today — no credit card required. In honor of America's 250th Birthday, every American deserves to hear the voices of those who built this Republic. After your trial, lifetime access is just $9.99.
+    </p>
+    <a href="/app" class="btn-primary">🇺🇸 Start Your Free 7-Day Trial</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-hd reveal">
+    <div class="section-eyebrow">What You Can Do</div>
+    <h2 class="section-title">A New Way to Learn American History</h2>
+    <p class="section-sub">Cinematic, interactive, and grounded in real primary sources</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-icon">🎙️</span>
+      <h3 class="feature-title">Ask a Founder Anything</h3>
+      <p class="feature-desc">Pose any modern question to Hamilton, Madison, Jefferson, Franklin, Washington, or Adams. Hear their actual documented philosophy applied to today's world.</p>
+      <span class="feature-tag">AI-Powered · Primary Sources</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">📜</span>
+      <h3 class="feature-title">Federalist Papers — Decoded</h3>
+      <p class="feature-desc">All 85 Federalist Papers explained in plain English. Discover why Federalist No. 51 still defines American government, and what No. 10 says about social media.</p>
+      <span class="feature-tag">19 Key Papers · Plain English</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">⚖️</span>
+      <h3 class="feature-title">The Constitution — Article by Article</h3>
+      <p class="feature-desc">Every Article and key Amendment explained with historical context. Why does the 14th Amendment appear in every major Supreme Court case? Find out.</p>
+      <span class="feature-tag">All 7 Articles · Key Amendments</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🔊</span>
+      <h3 class="feature-title">Hear the Founders Speak</h3>
+      <p class="feature-desc">Every response is read aloud in voices tuned to each Founder's personality — Washington's grave command, Hamilton's urgent energy, Franklin's warm wit.</p>
+      <span class="feature-tag">Voice AI · Per-Founder Tuning</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🏛️</span>
+      <h3 class="feature-title">Cinematic Experience</h3>
+      <p class="feature-desc">Historic portraits, typewriter reveals, dramatic layouts. This isn't a textbook — it's an immersive encounter with the people who built the Republic.</p>
+      <span class="feature-tag">Film-Grade Design · Mobile Ready</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🎓</span>
+      <h3 class="feature-title">Perfect for the Classroom</h3>
+      <p class="feature-desc">Teachers, students, and homeschool families: every lesson includes historical context, plain-English breakdown, and a "Test Yourself" reflection question.</p>
+      <span class="feature-tag">K–12 Friendly · Homeschool Ready</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS STRIP -->
+<section class="founders-strip">
+  <div class="founders-strip-inner">
+    <h2 class="founders-strip-title reveal">Meet the Founders</h2>
+    <p class="founders-strip-sub reveal">Six architects of American democracy — waiting to answer your questions</p>
+    <div class="founders-row">
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg/400px-Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg" alt="Hamilton" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Hamilton'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">Alexander Hamilton</div>
+          <div class="founder-role">First Secretary of the Treasury</div>
+        </div>
+      </div>
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/James_Madison.jpg/400px-James_Madison.jpg" alt="Madison" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Madison'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">James Madison</div>
+          <div class="founder-role">Father of the Constitution</div>
+        </div>
+      </div>
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg/400px-Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg" alt="Jefferson" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Jefferson'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">Thomas Jefferson</div>
+          <div class="founder-role">Author, Declaration of Independence</div>
+        </div>
+      </div>
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Joseph_Siffred_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/400px-Joseph_Siffred_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg" alt="Franklin" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Franklin'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">Benjamin Franklin</div>
+          <div class="founder-role">Diplomat, Scientist & Sage</div>
+        </div>
+      </div>
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg/400px-Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg" alt="Washington" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Washington'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">George Washington</div>
+          <div class="founder-role">Commander-in-Chief & First President</div>
+        </div>
+      </div>
+      <div class="founder-tile">
+        <img class="founder-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Official_Presidential_portrait_of_John_Adams_%28by_John_Trumbull%2C_c._1792%29.jpg/400px-Official_Presidential_portrait_of_John_Adams_%28by_John_Trumbull%2C_c._1792%29.jpg" alt="Adams" onerror="this.src='https://placehold.co/200x260/0A0F2E/B8202E?text=Adams'" />
+        <div class="founder-img-grad"></div>
+        <div class="founder-info">
+          <div class="founder-name">John Adams</div>
+          <div class="founder-role">Second President of the United States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="for-who">
+  <div class="for-who-inner">
+    <div class="section-hd reveal">
+      <div class="section-eyebrow">Perfect For</div>
+      <h2 class="section-title">Built for Every American</h2>
+      <p class="section-sub">From the classroom to the kitchen table</p>
+    </div>
+    <div class="for-grid">
+      <div class="for-card reveal">
+        <span class="for-emoji">👧</span>
+        <h3 class="for-title">Children & Students</h3>
+        <p class="for-desc">Plain-English explanations, fun questions, and lessons designed to make the Constitution and Founders come alive for young minds.</p>
+      </div>
+      <div class="for-card reveal">
+        <span class="for-emoji">👨‍🏫</span>
+        <h3 class="for-title">Teachers & Educators</h3>
+        <p class="for-desc">A living classroom tool. Use the lessons for civics, history, and social studies. Every lesson includes a discussion question built in.</p>
+      </div>
+      <div class="for-card reveal">
+        <span class="for-emoji">🏠</span>
+        <h3 class="for-title">Homeschool Families</h3>
+        <p class="for-desc">Self-paced, always available, and completely free. A full civics curriculum in a beautifully designed, easy-to-use app.</p>
+      </div>
+      <div class="for-card reveal">
+        <span class="for-emoji">🇺🇸</span>
+        <h3 class="for-title">Proud Americans</h3>
+        <p class="for-desc">Celebrate 250 years by actually reading the documents that created this nation — decoded, contextualized, and brought to life.</p>
+      </div>
+      <div class="for-card reveal">
+        <span class="for-emoji">⚖️</span>
+        <h3 class="for-title">Law Students & Lawyers</h3>
+        <p class="for-desc">Original intent, historical context, and primary source citations for every constitutional provision. A research companion unlike any other.</p>
+      </div>
+      <div class="for-card reveal">
+        <span class="for-emoji">🌍</span>
+        <h3 class="for-title">New Citizens & Immigrants</h3>
+        <p class="for-desc">Preparing for the citizenship test or just wanting to understand America deeply? This is the most engaging civics resource ever built.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-banner">
+  <div class="quote-rule"></div>
+  <blockquote class="quote-text">
+    "The <span class="red">Constitution</span> is not a document for the government
+    to restrain the people; it is an instrument for the people to
+    restrain the government."
+  </blockquote>
+  <div class="quote-attr">— Patrick Henry · Founding Father</div>
+</section>
+
+<!-- LESSONS PROMO -->
+<section class="lessons-promo" id="documents">
+  <div class="section-hd reveal">
+    <div class="section-eyebrow">The Library</div>
+    <h2 class="section-title">Two Complete Learning Tracks</h2>
+    <p class="section-sub">AI-powered lessons grounded in original documents</p>
+  </div>
+  <div class="lessons-cards">
+    <div class="lesson-card fed reveal">
+      <div class="lesson-card-num">85</div>
+      <span class="lesson-icon">📜</span>
+      <h3 class="lesson-card-title">The Federalist Papers</h3>
+      <span class="lesson-card-count">19 Key Papers · Hamilton, Madison & Jay</span>
+      <p class="lesson-card-desc">The greatest collection of political philosophy in American history — written in 1787–88 to convince New York to ratify the Constitution. Still cited by the Supreme Court today.</p>
+      <div class="lesson-features">
+        <div class="lesson-feature">Plain-English breakdown of each paper</div>
+        <div class="lesson-feature">Historical context — why was this written?</div>
+        <div class="lesson-feature">Why it matters in modern America</div>
+        <div class="lesson-feature">Ask the author directly after the lesson</div>
+      </div>
+    </div>
+    <div class="lesson-card con reveal">
+      <div class="lesson-card-num">27</div>
+      <span class="lesson-icon">⚖️</span>
+      <h3 class="lesson-card-title">The Constitution</h3>
+      <span class="lesson-card-count">All 7 Articles + Key Amendments</span>
+      <p class="lesson-card-desc">Every Article and the most important Amendments — from the Bill of Rights to the 25th Amendment — explained clearly, honestly, and with the controversies included.</p>
+      <div class="lesson-features">
+        <div class="lesson-feature">What does each clause actually mean?</div>
+        <div class="lesson-feature">The debates and compromises behind it</div>
+        <div class="lesson-feature">How courts interpret it today</div>
+        <div class="lesson-feature">A "Test Yourself" question after each lesson</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="launch">
+  <span class="final-stars">★ ★ ★ ★ ★ ★ ★</span>
+  <h2 class="final-title">The Republic Awaits</h2>
+  <div class="final-subtitle">Free for All Americans Through July 4th, 2026</div>
+  <div class="final-rule"></div>
+  <p class="final-desc">
+    250 years ago, extraordinary people built something that had never existed before. Their words still matter. Their arguments still apply. Start your free 7-day trial — then own it for life for just $9.99.
+  </p>
+  <div class="final-btns">
+    <a href="/app" class="btn-primary">
+      🇺🇸 &nbsp;Start Free 7-Day Trial
+    </a>
+  </div>
+  <div class="final-note">★ &nbsp; 7-Day Free Trial · No Credit Card Required · Then $9.99 Lifetime &nbsp; ★</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Voices of the Republic</div>
+  <div class="footer-copy">
+    Celebrating America's 250th Anniversary · 1776 — 2026<br />
+    <span style="font-size:12px;color:rgba(240,232,216,0.2);">Powered by IntexiaU · Built with AI · Primary Sources Only</span>
+  </div>
+  <div class="footer-stars">★ ★ ★</div>
+</footer>
+
+<script>
+// ── COUNTDOWN ──────────────────────────────────
+function updateCountdown() {
+  const target = new Date("2026-07-04T00:00:00");
+  const now    = new Date();
+  const diff   = target - now;
+  if (diff <= 0) return;
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+  document.getElementById("cd-days").textContent  = String(days).padStart(2,"0");
+  document.getElementById("cd-hours").textContent = String(hours).padStart(2,"0");
+  document.getElementById("cd-mins").textContent  = String(mins).padStart(2,"0");
+  document.getElementById("cd-secs").textContent  = String(secs).padStart(2,"0");
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── STARS ──────────────────────────────────────
+const sc = document.getElementById("stars-canvas");
+const sctx = sc.getContext("2d");
+let stars = [];
+function resizeStars() {
+  sc.width = window.innerWidth; sc.height = window.innerHeight;
+  stars = Array.from({length: 220}, () => ({
+    x: Math.random() * sc.width,
+    y: Math.random() * sc.height,
+    r: Math.random() * 1.4 + 0.3,
+    a: Math.random(),
+    speed: Math.random() * 0.008 + 0.003,
+    phase: Math.random() * Math.PI * 2
+  }));
+}
+resizeStars();
+window.addEventListener("resize", resizeStars);
+function animStars(t) {
+  sctx.clearRect(0, 0, sc.width, sc.height);
+  stars.forEach(s => {
+    const alpha = 0.3 + 0.7 * Math.abs(Math.sin(s.phase + t * s.speed));
+    sctx.beginPath();
+    sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    sctx.fill();
+  });
+  requestAnimationFrame(animStars);
+}
+requestAnimationFrame(animStars);
+
+// ── FIREWORKS ──────────────────────────────────
+const fw = document.getElementById("fw-canvas");
+const fctx = fw.getContext("2d");
+fw.width = window.innerWidth; fw.height = window.innerHeight;
+window.addEventListener("resize", () => { fw.width = window.innerWidth; fw.height = window.innerHeight; });
+
+const COLORS = ["#B8202E","#FFFFFF","#C9A84C","#D42535","#F5F0E8","#8B0D18","#ff6b6b","#ffd700"];
+let particles = [];
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y; this.color = color;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 6 + 2;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.life = 1; this.decay = Math.random() * 0.015 + 0.008;
+    this.r = Math.random() * 3 + 1;
+    this.gravity = 0.12;
+    this.trail = [];
+  }
+  update() {
+    this.trail.push({x: this.x, y: this.y});
+    if (this.trail.length > 6) this.trail.shift();
+    this.vy += this.gravity;
+    this.x += this.vx; this.y += this.vy;
+    this.vx *= 0.97; this.vy *= 0.97;
+    this.life -= this.decay;
+  }
+  draw(ctx) {
+    this.trail.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, this.r * (i / this.trail.length) * 0.6, 0, Math.PI * 2);
+      ctx.fillStyle = this.color.replace(")", `,${this.life * (i / this.trail.length) * 0.4})`).replace("rgb(", "rgba(");
+      ctx.fill();
+    });
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.life;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function burst(x, y) {
+  const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  const color2 = COLORS[Math.floor(Math.random() * COLORS.length)];
+  for (let i = 0; i < 80; i++) {
+    particles.push(new Particle(x, y, i % 2 === 0 ? color : color2));
+  }
+}
+
+function animFw() {
+  fctx.fillStyle = "rgba(6,9,26,0.18)";
+  fctx.fillRect(0, 0, fw.width, fw.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => { p.update(); p.draw(fctx); });
+  requestAnimationFrame(animFw);
+}
+animFw();
+
+// Auto-launch fireworks periodically
+function launchRandom() {
+  const x = Math.random() * fw.width * 0.8 + fw.width * 0.1;
+  const y = Math.random() * fw.height * 0.5 + fw.height * 0.05;
+  burst(x, y);
+}
+launchRandom();
+setInterval(launchRandom, 2200);
+setTimeout(() => { launchRandom(); launchRandom(); }, 800);
+
+// Click to launch
+document.addEventListener("click", e => {
+  if (e.target.tagName === "A" || e.target.tagName === "BUTTON") return;
+  burst(e.clientX, e.clientY);
+});
+
+// ── SCROLL REVEAL ──────────────────────────────
+const reveals = document.querySelectorAll(".reveal");
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add("visible"), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
