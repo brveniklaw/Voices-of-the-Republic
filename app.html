@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Voices of the Republic</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+  /* ── GATE OVERLAY ─────────────────────────────── */
+  #app-gate {
+    position: fixed; inset: 0; z-index: 99999;
+    background: radial-gradient(ellipse at center, #0A0F2E 0%, #06091A 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    font-family: 'EB Garamond', Georgia, serif;
+  }
+  #app-gate.hidden { display: none; }
+
+  .gate-stars { font-size: 13px; letter-spacing: 10px; color: #B8202E; margin-bottom: 32px; }
+  .gate-title {
+    font-family: 'Cinzel', serif; font-weight: 900;
+    font-size: clamp(32px, 6vw, 72px); color: #F5EDD8;
+    line-height: 0.95; margin-bottom: 10px;
+    text-shadow: 0 0 60px rgba(184,32,46,0.3);
+  }
+  .gate-subtitle {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: clamp(16px, 2.5vw, 22px); color: #B8202E; margin-bottom: 16px;
+  }
+  .gate-rule {
+    width: 120px; height: 1px; margin: 0 auto 24px;
+    background: linear-gradient(to right, transparent, #B8202E, transparent);
+  }
+  .gate-free-badge {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
+    color: #C9A84C; border: 1px solid rgba(201,168,76,0.4);
+    padding: 8px 24px; margin-bottom: 32px; display: inline-block;
+    background: rgba(201,168,76,0.06);
+  }
+  .gate-desc {
+    font-size: clamp(15px, 1.8vw, 18px); color: rgba(240,232,216,0.7);
+    max-width: 520px; line-height: 1.85; margin-bottom: 36px;
+  }
+  .gate-form { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 14px; }
+  .gate-input {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(184,32,46,0.3);
+    border-bottom: 2px solid rgba(184,32,46,0.6);
+    color: #F0E8D8; font-family: 'EB Garamond', serif; font-size: 18px;
+    padding: 16px 20px; outline: none; transition: border 0.3s;
+  }
+  .gate-input::placeholder { color: rgba(240,232,216,0.28); }
+  .gate-input:focus { border-color: #B8202E; background: rgba(184,32,46,0.04); }
+  .gate-btn {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px;
+    color: #F5EDD8; background: #B8202E; border: none; padding: 18px;
+    cursor: pointer; text-transform: uppercase; transition: all 0.3s;
+    clip-path: polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%);
+  }
+  .gate-btn:hover:not(:disabled) { background: #8B1220; box-shadow: 0 8px 32px rgba(184,32,46,0.5); }
+  .gate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .gate-err { font-size: 14px; color: #ff6b6b; }
+  .gate-note {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+    color: rgba(201,168,76,0.5); text-transform: uppercase; margin-top: 20px;
+  }
+  .gate-loading { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px; color: #B8202E; }
+  .gate-nav { position: absolute; top: 20px; right: 24px; display: flex; gap: 20px; }
+  .gate-nav a {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px;
+    color: rgba(240,232,216,0.45); text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .gate-nav a:hover { color: #B8202E; }
+
+  /* countdown inside gate */
+  .gate-countdown {
+    display: flex; gap: 20px; align-items: center; margin-bottom: 28px; flex-wrap: wrap; justify-content: center;
+  }
+  .gcd-unit { text-align: center; }
+  .gcd-num {
+    font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900;
+    color: #fff; display: block; line-height: 1;
+  }
+  .gcd-label {
+    font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 4px;
+    color: rgba(255,255,255,0.5); text-transform: uppercase;
+  }
+  .gcd-sep { font-family: 'Cinzel', serif; font-size: 28px; color: rgba(184,32,46,0.7); margin-top: -4px; }
+
+  #react-root { width: 100%; min-height: 100vh; }
+  body { margin: 0; background: #06091A; }
+</style>
+</head>
+<body>
+
+<!-- ACCESS GATE -->
+<div id="app-gate">
+  <div class="gate-nav">
+    <a href="/">Home</a>
+    <a href="/pricing">Site Licenses</a>
+  </div>
+  <div class="gate-stars">★ ★ ★ ★ ★</div>
+  <h1 class="gate-title">Voices of<br/>the Republic</h1>
+  <div class="gate-subtitle">The Founding Fathers on the Modern Age</div>
+  <div class="gate-rule"></div>
+  <div id="gate-free-content">
+    <div class="gate-free-badge" id="gate-badge">★ 7-Day Free Trial — America's 250th Anniversary ★</div>
+    <div class="gate-countdown" id="gate-cd">
+      <div class="gcd-unit"><span class="gcd-num" id="gcd-d">--</span><span class="gcd-label">Days</span></div>
+      <span class="gcd-sep">:</span>
+      <div class="gcd-unit"><span class="gcd-num" id="gcd-h">--</span><span class="gcd-label">Hrs</span></div>
+      <span class="gcd-sep">:</span>
+      <div class="gcd-unit"><span class="gcd-num" id="gcd-m">--</span><span class="gcd-label">Min</span></div>
+      <span class="gcd-sep">:</span>
+      <div class="gcd-unit"><span class="gcd-num" id="gcd-s">--</span><span class="gcd-label">Sec</span></div>
+    </div>
+    <p class="gate-desc">
+      Start your <strong>7-day free trial</strong> — no credit card required. In honor of America's 250th Birthday. After your trial, lifetime access is just <strong style="color:#C9A84C">$9.99</strong>.
+    </p>
+    <div class="gate-form" id="register-form">
+      <input class="gate-input" id="gate-name"  type="text"  placeholder="Your Name" />
+      <input class="gate-input" id="gate-email" type="email" placeholder="Your Email Address" required />
+      <button class="gate-btn" id="gate-submit" onclick="handleRegister()">🇺🇸 &nbsp;Start Free 7-Day Trial</button>
+      <span class="gate-err" id="gate-err"></span>
+    </div>
+    <div id="gate-loading" style="display:none" class="gate-loading">Granting access...</div>
+    <div class="gate-note" id="gate-note">No credit card · 7 days free · Then $9.99 lifetime</div>
+  </div>
+  <div id="gate-paid-content" style="display:none">
+    <p class="gate-desc">
+      America's 250th Birthday has arrived! Lifetime access to all six Founding Fathers,
+      the Federalist Papers, and the Constitution is just <strong style="color:#C9A84C">$9.99</strong>.
+    </p>
+    <div class="gate-form">
+      <input class="gate-input" id="gate-email-paid" type="email" placeholder="Your Email (for receipt)" />
+      <button class="gate-btn" id="gate-pay-btn" onclick="handlePayment()">🇺🇸 &nbsp;Get Lifetime Access — $9.99</button>
+      <span class="gate-err" id="gate-err-paid"></span>
+    </div>
+    <div class="gate-note" style="margin-top:16px">Secure payment via Stripe · One-time · No subscription</div>
+  </div>
+</div>
+
+<!-- REACT APP ROOT -->
+<div id="react-root"></div>
+
+<!-- FOUNDERS APP -->
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+// ── AZURE TTS CONFIG ─────────────────────────────────────────────────────────
+// 1. Sign up free at portal.azure.com → Create "Speech" resource
+// 2. Go to Keys and Endpoint → paste Key 1 and Region below
+const AZURE_KEY    = "YOUR_AZURE_KEY_HERE";   // e.g. "a1b2c3d4e5f6..."
+const AZURE_REGION = "YOUR_REGION_HERE";       // e.g. "eastus" or "westus2"
+const AZURE_URL    = `https://${AZURE_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`;
+// ─────────────────────────────────────────────────────────────────────────────
+
+
+const FOUNDERS = [
+  {
+    id: "hamilton",
+    name: "Alexander Hamilton",
+    title: "First Secretary of the Treasury",
+    lifespan: "1755 – 1804",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg/400px-Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg",
+    tagline: "Architect of the Republic",
+    quote: "A nation which can prefer disgrace to danger is prepared for a master.",
+    quoteSource: "The Federalist No. 15, 1787",
+    primarySources: [
+      "The Federalist Papers (No. 1, 6, 9, 11–12, 15–17, 21–36, 59–61, 65–85)",
+      "Report on Public Credit (January 1790)",
+      "Report on a National Bank (December 1790)",
+      "Report on Manufactures (December 1791)",
+      "The Continentalist essays (1781–82)",
+      "Letters to George Washington, Gouverneur Morris, and Robert Morris"
+    ],
+    philosophy: "Strong federal government with broad implied powers; national bank and commercial republic; energetic executive (Federalist No. 70); funded national debt as instrument of national credit; broad construction of the Constitution; manufacturing over agrarianism",
+    accent: "#C9A84C",
+    voice: { rate: 1.08, pitch: 1.06, voiceName: ["Google UK English Male", "Microsoft David", "Daniel"] },
+    azureVoice: { name: "en-US-DavisNeural", rate: "+12%", pitch: "+5%", style: "newscast" }
+  },
+  {
+    id: "madison",
+    name: "James Madison",
+    title: "Father of the Constitution",
+    lifespan: "1751 – 1836",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/James_Madison.jpg/400px-James_Madison.jpg",
+    tagline: "Architect of Balance",
+    quote: "Ambition must be made to counteract ambition.",
+    quoteSource: "The Federalist No. 51, 1788",
+    primarySources: [
+      "The Federalist Papers (No. 10, 14, 37–58, 62–63)",
+      "Notes on the Constitutional Convention (1787)",
+      "Virginia Resolutions (1798)",
+      "Memorial and Remonstrance Against Religious Assessments (1785)",
+      "Vices of the Political System of the United States (1787)",
+      "Letters to Thomas Jefferson and Edmund Randolph"
+    ],
+    philosophy: "Separation of powers and checks and balances; extended republic as guard against faction (Federalist No. 10); dangers of majority tyranny; Bill of Rights as essential safeguard; later evolution toward states' rights and strict construction",
+    accent: "#9B7BC4",
+    voice: { rate: 0.91, pitch: 0.94, voiceName: ["Google UK English Male", "Microsoft David", "Daniel"] },
+    azureVoice: { name: "en-US-ChristopherNeural", rate: "-8%", pitch: "-3%", style: "newscast" }
+  },
+  {
+    id: "jefferson",
+    name: "Thomas Jefferson",
+    title: "Author of the Declaration of Independence",
+    lifespan: "1743 – 1826",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg/400px-Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg",
+    tagline: "Voice of Natural Liberty",
+    quote: "The earth belongs always to the living generation.",
+    quoteSource: "Letter to James Madison, September 1789",
+    primarySources: [
+      "Declaration of Independence (1776)",
+      "Notes on the State of Virginia (1785)",
+      "Virginia Statute for Religious Freedom (1786)",
+      "First Inaugural Address (March 1801)",
+      "Kentucky Resolutions (1798)",
+      "Letters to James Madison, John Adams, Roger Weightman, and Benjamin Rush"
+    ],
+    philosophy: "Natural rights and consent of the governed; agrarian republic and ward democracy; strict construction of the Constitution; states' rights; wall of separation between church and state; generational sovereignty; freedom of the press and open inquiry",
+    accent: "#C4743B",
+    voice: { rate: 0.87, pitch: 0.96, voiceName: ["Google US English", "Microsoft Mark", "Alex"] },
+    azureVoice: { name: "en-US-BrianNeural", rate: "-10%", pitch: "-2%", style: "newscast" }
+  },
+  {
+    id: "franklin",
+    name: "Benjamin Franklin",
+    title: "Diplomat, Scientist & Sage",
+    lifespan: "1706 – 1790",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Joseph_Siffred_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/400px-Joseph_Siffred_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg",
+    tagline: "The American Prometheus",
+    quote: "An investment in knowledge pays the best interest.",
+    quoteSource: "Poor Richard's Almanack, 1758",
+    primarySources: [
+      "The Autobiography of Benjamin Franklin (written 1771–1790)",
+      "Poor Richard's Almanack (1732–1758)",
+      "Speech at the Close of the Constitutional Convention (September 1787)",
+      "The Way to Wealth (1758)",
+      "Observations Concerning the Increase of Mankind (1751)",
+      "Letters to Joseph Priestley, David Hume, and the Marquis de Condorcet"
+    ],
+    philosophy: "Empiricism and pragmatism over ideology; civic virtue through self-improvement; compromise as the engine of governance; labor as the source of national wealth; free press and public education as foundations of liberty; scientific inquiry applied to civic life",
+    accent: "#4A8B6F",
+    voice: { rate: 0.83, pitch: 0.88, voiceName: ["Google UK English Male", "Microsoft George", "Daniel"] },
+    azureVoice: { name: "en-US-EricNeural", rate: "-15%", pitch: "-6%", style: "newscast" }
+  },
+  {
+    id: "washington",
+    name: "George Washington",
+    title: "Commander-in-Chief & First President",
+    lifespan: "1732 – 1799",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg/400px-Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg",
+    tagline: "The Indispensable Man",
+    quote: "Guard against the impostures of pretended patriotism.",
+    quoteSource: "Farewell Address, September 1796",
+    primarySources: [
+      "Farewell Address (September 19, 1796)",
+      "First Inaugural Address (April 30, 1789)",
+      "Letter to the Hebrew Congregation at Newport (August 1790)",
+      "Circular Letter to the States (June 1783)",
+      "General Orders and Military Correspondence (1775–1783)",
+      "Diaries of George Washington"
+    ],
+    philosophy: "Unity of the republic above partisan faction; dangers of political parties and foreign entanglement; civic virtue and personal character as preconditions of self-government; executive precedent and institutional restraint; religious tolerance and pluralism as civic necessity",
+    accent: "#4A6B8B",
+    voice: { rate: 0.76, pitch: 0.80, voiceName: ["Google UK English Male", "Microsoft George", "Daniel"] },
+    azureVoice: { name: "en-US-AndrewNeural", rate: "-20%", pitch: "-10%", style: "newscast" }
+  },
+  {
+    id: "adams",
+    name: "John Adams",
+    title: "Second President of the United States",
+    lifespan: "1735 – 1826",
+    portrait: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Official_Presidential_portrait_of_John_Adams_%28by_John_Trumbull%2C_c._1792%29.jpg/400px-Official_Presidential_portrait_of_John_Adams_%28by_John_Trumbull%2C_c._1792%29.jpg",
+    tagline: "Champion of Rule of Law",
+    quote: "Facts are stubborn things; and whatever may be our wishes, our inclinations, or the dictates of our passions, they cannot alter the state of facts and evidence.",
+    quoteSource: "Argument in Defense of the British Soldiers, 1770",
+    primarySources: [
+      "A Defence of the Constitutions of Government of the United States (1787)",
+      "Thoughts on Government (1776)",
+      "Discourses on Davila (1790)",
+      "Diary and Autobiography of John Adams",
+      "Letters to Abigail Adams",
+      "Correspondence with Thomas Jefferson (1812–1826)"
+    ],
+    philosophy: "Balanced government requiring genuinely separate executive, legislative, and judicial branches; human nature as inherently ambitious requiring institutional checks; independent judiciary as guardian of rights; rule of law over rule of men; classical republicanism; skepticism of pure democracy and mob passion",
+    accent: "#8B5A3A",
+    voice: { rate: 0.94, pitch: 0.98, voiceName: ["Google UK English Male", "Microsoft David", "Daniel"] },
+    azureVoice: { name: "en-US-GuyNeural", rate: "-5%", pitch: "+2%", style: "newscast" }
+  }
+];
+
+const SUGGESTIONS = [
+  "What would you make of artificial intelligence replacing human labor?",
+  "How should we address the growing national debt?",
+  "Is social media undermining republican government?",
+  "What counsel on immigration and national identity?",
+  "How should government respond to climate change?",
+  "On the concentration of power in large corporations?",
+  "What do you make of a 24-hour partisan press?",
+  "Should the Constitution be amended for our age?"
+];
+
+const FEDERALIST_PAPERS = [
+  { num: 1,  author: "Hamilton", date: "Oct 27, 1787", theme: "The Case for Union",           tagline: "Why a strong national union is essential to liberty and safety." },
+  { num: 6,  author: "Hamilton", date: "Nov 14, 1787", theme: "Dangers of Disunion",           tagline: "Commercial nations are not immune to war — union prevents conflict between states." },
+  { num: 9,  author: "Hamilton", date: "Nov 21, 1787", theme: "The Republic as Safeguard",     tagline: "The science of politics has improved — a confederate republic can prevent tyranny." },
+  { num: 10, author: "Madison",  date: "Nov 22, 1787", theme: "Factions & the Extended Republic", tagline: "A large republic controls factions better than a small one — the foundational argument." },
+  { num: 14, author: "Madison",  date: "Nov 30, 1787", theme: "Republic vs. Democracy",        tagline: "A republic, not a pure democracy, is capable of governing an extended territory." },
+  { num: 15, author: "Hamilton", date: "Dec 1, 1787",  theme: "Defects of the Confederation",  tagline: "The existing Articles of Confederation are fatally flawed — a stronger union is needed." },
+  { num: 39, author: "Madison",  date: "Jan 16, 1788", theme: "Republican Government Defined",  tagline: "What does republican government mean, and does the Constitution conform to it?" },
+  { num: 45, author: "Madison",  date: "Jan 26, 1788", theme: "Federal vs. State Power",        tagline: "The powers of the federal government are few and defined; state powers are broad." },
+  { num: 47, author: "Madison",  date: "Jan 30, 1788", theme: "Separation of Powers",           tagline: "The three branches must be separate to prevent tyrannical accumulation of power." },
+  { num: 48, author: "Madison",  date: "Feb 1, 1788",  theme: "Checks on Each Branch",          tagline: "Mere parchment barriers are not enough — each department must resist the others." },
+  { num: 51, author: "Madison",  date: "Feb 6, 1788",  theme: "Checks & Balances",              tagline: "Ambition must counteract ambition — the structural genius of the Constitution." },
+  { num: 62, author: "Madison",  date: "Feb 27, 1788", theme: "The Senate",                     tagline: "The Senate provides stability and wisdom against the passions of the moment." },
+  { num: 68, author: "Hamilton", date: "Mar 12, 1788", theme: "The Electoral College",          tagline: "How and why the President should be chosen by electors, not direct popular vote." },
+  { num: 70, author: "Hamilton", date: "Mar 15, 1788", theme: "Energy in the Executive",        tagline: "A single energetic executive is essential — unity, duration, and accountability." },
+  { num: 71, author: "Hamilton", date: "Mar 18, 1788", theme: "Executive Independence",         tagline: "The executive must have enough independence to act decisively for the public good." },
+  { num: 78, author: "Hamilton", date: "May 28, 1788", theme: "The Judiciary",                  tagline: "The courts hold neither sword nor purse — but they are the guardian of the Constitution." },
+  { num: 79, author: "Hamilton", date: "May 28, 1788", theme: "Judicial Tenure & Salary",       tagline: "Life tenure and protected salaries ensure judges remain independent of political pressure." },
+  { num: 84, author: "Hamilton", date: "Jul 16, 1788", theme: "Against a Bill of Rights",       tagline: "Hamilton argues — controversially — that a Bill of Rights is unnecessary and dangerous." },
+  { num: 85, author: "Hamilton", date: "Aug 13, 1788", theme: "Concluding Remarks",             tagline: "The final paper: the Constitution is imperfect but far better than the alternative." },
+];
+
+const CONSTITUTION_DOCS = [
+  { id: "art1",   type: "article", num: "I",    title: "Article I",    subtitle: "The Legislative Branch",        tagline: "Congress: its structure, powers, and the critical limits placed upon it." },
+  { id: "art2",   type: "article", num: "II",   title: "Article II",   subtitle: "The Executive Branch",          tagline: "The Presidency: how it is filled, what powers it holds, and how it can be removed." },
+  { id: "art3",   type: "article", num: "III",  title: "Article III",  subtitle: "The Judicial Branch",           tagline: "The Supreme Court and federal courts: jurisdiction, treason, and judicial power." },
+  { id: "art4",   type: "article", num: "IV",   title: "Article IV",   subtitle: "Relations Among the States",    tagline: "Full faith and credit, new states, and the guarantee of republican government." },
+  { id: "art5",   type: "article", num: "V",    title: "Article V",    subtitle: "The Amendment Process",         tagline: "How — and how deliberately — the Constitution can be changed." },
+  { id: "art6",   type: "article", num: "VI",   title: "Article VI",   subtitle: "Supremacy of the Constitution", tagline: "The Constitution, federal law, and treaties are the supreme law of the land." },
+  { id: "art7",   type: "article", num: "VII",  title: "Article VII",  subtitle: "Ratification",                  tagline: "Nine states were required to ratify — and what that process revealed about the founders." },
+  { id: "am1",    type: "amend",   num: "1st",  title: "1st Amendment",  subtitle: "Religion, Speech, Press & Assembly", tagline: "Five fundamental freedoms — and what the founders meant by each." },
+  { id: "am2",    type: "amend",   num: "2nd",  title: "2nd Amendment",  subtitle: "The Right to Bear Arms",      tagline: "The most contested amendment: militias, individual rights, and original intent." },
+  { id: "am4",    type: "amend",   num: "4th",  title: "4th Amendment",  subtitle: "Search & Seizure",            tagline: "Protection from unreasonable searches — and what it means in the digital age." },
+  { id: "am5",    type: "amend",   num: "5th",  title: "5th Amendment",  subtitle: "Due Process & Self-Incrimination", tagline: "No person shall be deprived of life, liberty, or property without due process." },
+  { id: "am6",    type: "amend",   num: "6th",  title: "6th Amendment",  subtitle: "Right to a Fair Trial",       tagline: "Speedy trial, impartial jury, right to counsel — the pillars of criminal justice." },
+  { id: "am10",   type: "amend",   num: "10th", title: "10th Amendment", subtitle: "Reserved Powers",             tagline: "Powers not given to the federal government are reserved to the states or the people." },
+  { id: "am13",   type: "amend",   num: "13th", title: "13th Amendment", subtitle: "Abolition of Slavery",        tagline: "1865: slavery abolished — and the one exception clause that still echoes today." },
+  { id: "am14",   type: "amend",   num: "14th", title: "14th Amendment", subtitle: "Equal Protection & Due Process", tagline: "Citizenship, equal protection, due process — the most litigated amendment in history." },
+  { id: "am19",   type: "amend",   num: "19th", title: "19th Amendment", subtitle: "Women's Suffrage",            tagline: "1920: the right to vote shall not be denied on account of sex." },
+  { id: "am25",   type: "amend",   num: "25th", title: "25th Amendment", subtitle: "Presidential Succession",     tagline: "What happens when a president cannot serve — and the guardrails against power vacuums." },
+];
+
+const getLessonPrompt = (doc, track) => {
+  const isFedralist = track === "federalist";
+  const docName = isFedralist
+    ? `Federalist No. ${doc.num} — "${doc.theme}" by ${doc.author} (${doc.date})`
+    : `${doc.title}: ${doc.subtitle}`;
+
+  return `You are a brilliant, engaging constitutional scholar and educator. Your task is to teach ${docName} to a curious modern American reader with no legal background.
+
+STRUCTURE YOUR LESSON EXACTLY AS FOLLOWS — use these exact section headers:
+
+**WHAT IS THIS DOCUMENT?**
+2-3 sentences: the plain facts — what it is, who wrote it, when, and why it was written at that specific moment in history.
+
+**THE CORE ARGUMENT IN PLAIN ENGLISH**
+3-5 sentences: explain the central idea in accessible, vivid language. Use an analogy if it helps. No jargon. Make it click.
+
+**THE HISTORICAL MOMENT**
+2-4 sentences: what was happening in America at this exact time that made this document necessary or controversial?
+
+**THREE THINGS TO KNOW**
+Exactly 3 numbered points (2-3 sentences each) — the most important, surprising, or misunderstood aspects of this document.
+
+**WHY IT MATTERS TODAY**
+3-4 sentences: how does this document directly shape American life, law, or politics in the present day? Be specific with modern examples.
+
+**TEST YOURSELF**
+One thought-provoking question the reader should sit with after the lesson.
+
+Keep total response to 450-550 words. Be engaging, clear, and intellectually honest about contested interpretations.`;
+};
+
+const getSystemPrompt = (founder) => `You are ${founder.name}, ${founder.title} (${founder.lifespan}). You are one of America's Founding Fathers, being consulted on a matter of the modern age.
+
+GROUNDING RULES — FOLLOW PRECISELY:
+1. Every argument must be rooted in your ACTUAL documented writings. Cite only real documents you authored.
+2. Your verified primary sources: ${founder.primarySources.join("; ")}
+3. Your core documented philosophy: ${founder.philosophy}
+4. When citing a document, be specific: "As I argued in Federalist No. [X]...", "In my letter to [person] of [approximate year]...", "In my [document name] of [year]..."
+5. If extrapolating beyond clearly documented positions, acknowledge it honestly: "Though I never directly addressed [topic], my documented principles concerning [related matter] would counsel..."
+6. Write in first person with your authentic rhetorical voice — formal, impassioned, intellectually precise, occasionally ironic.
+7. NEVER fabricate specific quotations attributed to yourself. Reference your documented positions and philosophy, but do not invent verbatim quotes.
+8. Do not be vague — be direct, specific, and intellectually courageous in your counsel.
+
+RESPONSE STRUCTURE (follow exactly):
+[Paragraph 1 — 2-4 sentences]: Your immediate reaction grounded in a specific primary source you actually wrote.
+[Paragraph 2 — 3-5 sentences]: How your documented philosophy applies directly to this modern issue.
+[Paragraph 3 — 2-4 sentences]: Your direct counsel or warning to citizens of this age.
+
+Then on a new line write exactly this marker and nothing else before the list:
+---SOURCES---
+• [Full document name, year] — [one sentence on its direct relevance to your answer]
+• [Full document name, year] — [one sentence on its direct relevance]
+• [Full document name, year] — [one sentence on its direct relevance]
+
+Keep the main response (before ---SOURCES---) to 280-360 words. Be substantive and direct, not ornamental.`;
+
+const APP_CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+  .fa-app *, .fa-app *::before, .fa-app *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .fa-app {
+    min-height: 100vh;
+    background: #080C18;
+    color: #F0E8D8;
+    font-family: 'EB Garamond', Georgia, serif;
+    position: relative; overflow-x: hidden;
+  }
+
+  .fa-grain {
+    position: fixed; inset: -100px; width: calc(100% + 200px); height: calc(100% + 200px);
+    pointer-events: none; z-index: 9999; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: fa-grain-anim 0.35s steps(1) infinite;
+  }
+  @keyframes fa-grain-anim {
+    0%  { transform:translate(0,0); } 20% { transform:translate(-3%,-4%); }
+    40% { transform:translate(4%,2%); } 60% { transform:translate(-2%,5%); }
+    80% { transform:translate(5%,-3%); } 100% { transform:translate(-1%,3%); }
+  }
+
+  .fa-vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+    background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(0,0,0,0.82) 100%);
+  }
+
+  .fa-screen { position: relative; z-index: 1; }
+
+  /* ── 250th BANNER ─────────────────────────────── */
+  .fa-anniversary-banner {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    padding: 14px 32px; text-align: center; flex-wrap: wrap;
+    background: linear-gradient(135deg, #8B0D14 0%, #B8202E 50%, #8B0D14 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    position: relative; overflow: hidden;
+    opacity: 0; animation: fa-fadeIn 0.8s ease forwards 0.2s;
+  }
+  .fa-banner-stars { color: rgba(255,255,255,0.6); font-size: 13px; letter-spacing: 4px; }
+  .fa-banner-text {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px;
+    color: #fff; text-transform: uppercase;
+  }
+  .fa-countdown {
+    display: flex; gap: 16px; align-items: center;
+  }
+  .fa-cd-unit { text-align: center; }
+  .fa-cd-num {
+    font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900;
+    color: #fff; line-height: 1; display: block;
+  }
+  .fa-cd-label {
+    font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 3px;
+    color: rgba(255,255,255,0.6); text-transform: uppercase; display: block; margin-top: 2px;
+  }
+  .fa-cd-sep { font-family: 'Cinzel', serif; font-size: 20px; color: rgba(255,255,255,0.4); margin-top: -4px; }
+
+  /* ── INTRO ─────────────────────────────────────── */
+  .fa-intro {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: calc(100vh - 52px); text-align: center; padding: 60px 24px;
+    background:
+      linear-gradient(to bottom, rgba(8,12,24,0.1) 0%, rgba(8,12,24,0.92) 65%, #080C18 100%),
+      url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg/1280px-Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg') center 30% / cover no-repeat;
+  }
+
+  .fa-intro-eyebrow {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 7px; color: #B8202E;
+    text-transform: uppercase; margin-bottom: 28px;
+    opacity: 0; animation: fa-fadeUp 0.8s ease forwards 0.4s;
+  }
+  .fa-intro-title {
+    font-family: 'Cinzel', serif; font-size: clamp(48px, 9vw, 112px); font-weight: 900;
+    line-height: 0.95; color: #F5EDD8;
+    text-shadow: 0 0 100px rgba(184,32,46,0.2), 2px 6px 30px rgba(0,0,0,0.9);
+    margin-bottom: 10px; opacity: 0; animation: fa-fadeUp 1s ease forwards 0.7s;
+  }
+  .fa-intro-subtitle {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: clamp(17px, 3vw, 28px); color: #B8202E; margin-bottom: 40px;
+    opacity: 0; animation: fa-fadeUp 0.8s ease forwards 1.1s;
+  }
+  .fa-intro-rule {
+    width: 140px; height: 1px;
+    background: linear-gradient(to right, transparent, #B8202E 50%, transparent);
+    margin: 0 auto 36px; opacity: 0; animation: fa-fadeIn 0.8s ease forwards 1.4s;
+  }
+  .fa-intro-desc {
+    font-family: 'EB Garamond', serif; font-size: clamp(15px, 2vw, 19px);
+    color: rgba(240,232,216,0.65); max-width: 580px; line-height: 1.85; margin-bottom: 64px;
+    opacity: 0; animation: fa-fadeUp 0.8s ease forwards 1.6s;
+  }
+  .fa-enter-btn {
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 6px;
+    color: #F5EDD8; background: #B8202E; border: none; padding: 20px 64px;
+    cursor: pointer; text-transform: uppercase; transition: all 0.35s ease;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    opacity: 0; animation: fa-fadeUp 0.8s ease forwards 1.9s;
+  }
+  .fa-enter-btn:hover { background: #8B1220; box-shadow: 0 10px 48px rgba(184,32,46,0.5); transform: translateY(-3px); }
+
+  /* ── SELECT ────────────────────────────────────── */
+  .fa-select { padding: 72px 48px 96px; max-width: 1500px; margin: 0 auto; }
+  .fa-section-hd { text-align: center; margin-bottom: 72px; }
+  .fa-eyebrow { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 6px; color: #B8202E; text-transform: uppercase; margin-bottom: 18px; }
+  .fa-section-title { font-family: 'Cinzel', serif; font-size: clamp(30px, 5vw, 58px); font-weight: 600; color: #F5EDD8; line-height: 1.15; margin-bottom: 16px; }
+  .fa-section-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; color: rgba(240,232,216,0.45); }
+
+  .fa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .fa-card {
+    position: relative; cursor: pointer; overflow: hidden;
+    background: #0C1022; border: 1px solid rgba(184,32,46,0.15);
+    transition: all 0.4s ease; aspect-ratio: 2/3; display: flex; flex-direction: column;
+  }
+  .fa-card:hover {
+    border-color: rgba(184,32,46,0.5); transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(184,32,46,0.2);
+  }
+  .fa-card-img-wrap { position: relative; flex: 1; overflow: hidden; }
+  .fa-card-img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    filter: grayscale(30%) sepia(20%) contrast(1.12) brightness(0.88); transition: all 0.5s ease;
+  }
+  .fa-card:hover .fa-card-img { filter: grayscale(10%) sepia(10%) contrast(1.08); transform: scale(1.04); }
+  .fa-card-grad {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 65%;
+    background: linear-gradient(to top, #0C1022 0%, rgba(12,16,34,0.5) 55%, transparent 100%);
+  }
+  .fa-card-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+  .fa-card:hover .fa-card-overlay { opacity: 1; }
+  .fa-card-cta {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px;
+    color: #F5EDD8; text-transform: uppercase; border: 1px solid #B8202E;
+    padding: 10px 28px; background: rgba(8,12,24,0.9);
+  }
+  .fa-card-info { padding: 18px 20px 22px; position: relative; background: #0C1022; }
+  .fa-card-years { position: absolute; top: 18px; right: 18px; font-family: 'EB Garamond', serif; font-size: 12px; color: rgba(240,232,216,0.28); letter-spacing: 1px; }
+  .fa-card-name { font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600; color: #F5EDD8; margin-bottom: 4px; line-height: 1.3; }
+  .fa-card-role { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: rgba(240,232,216,0.42); margin-bottom: 10px; }
+  .fa-card-tagline { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; }
+
+  /* ── QUESTION ──────────────────────────────────── */
+  .fa-question { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+  .fa-q-left { position: relative; overflow: hidden; }
+  .fa-q-left-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; filter: grayscale(50%) sepia(30%) contrast(1.15) brightness(0.62); }
+  .fa-q-left-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(8,12,24,0) 50%, #080C18 100%), linear-gradient(to bottom, rgba(8,12,24,0.25) 0%, rgba(8,12,24,0) 40%);
+  }
+  .fa-q-left-content { position: absolute; bottom: 56px; left: 52px; right: 20px; }
+  .fa-q-eyebrow { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px; color: #B8202E; text-transform: uppercase; margin-bottom: 14px; }
+  .fa-q-name { font-family: 'Cinzel', serif; font-size: clamp(26px, 3vw, 48px); font-weight: 700; color: #F5EDD8; line-height: 1.05; margin-bottom: 6px; text-shadow: 2px 6px 24px rgba(0,0,0,0.9); }
+  .fa-q-title { font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; color: rgba(240,232,216,0.5); margin-bottom: 28px; }
+  .fa-q-quote-block { border-left: 2px solid; padding-left: 22px; max-width: 400px; }
+  .fa-q-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: rgba(240,232,216,0.75); line-height: 1.65; margin-bottom: 10px; }
+  .fa-q-quote-src { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; color: #B8202E; text-transform: uppercase; }
+  .fa-q-right { display: flex; flex-direction: column; justify-content: center; padding: 80px 60px; background: #080C18; overflow-y: auto; }
+  .fa-back-btn { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px; color: rgba(184,32,46,0.55); text-transform: uppercase; cursor: pointer; border: none; background: none; margin-bottom: 52px; transition: color 0.25s ease; text-align: left; padding: 0; }
+  .fa-back-btn:hover { color: #B8202E; }
+  .fa-q-prompt { font-family: 'Cinzel', serif; font-size: clamp(22px, 2.8vw, 36px); font-weight: 600; color: #F5EDD8; line-height: 1.25; margin-bottom: 10px; }
+  .fa-q-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 17px; color: rgba(240,232,216,0.42); margin-bottom: 40px; line-height: 1.65; }
+  .fa-textarea {
+    width: 100%; background: rgba(255,255,255,0.025); outline: none;
+    border: 1px solid rgba(184,32,46,0.2); border-bottom: 2px solid rgba(184,32,46,0.5);
+    color: #F0E8D8; font-family: 'EB Garamond', serif; font-size: 19px;
+    padding: 22px 26px; resize: none; line-height: 1.75; min-height: 148px; transition: all 0.3s ease; margin-bottom: 28px;
+  }
+  .fa-textarea::placeholder { color: rgba(240,232,216,0.22); }
+  .fa-textarea:focus { border-color: rgba(184,32,46,0.8); background: rgba(184,32,46,0.03); }
+  .fa-suggest-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 5px; color: rgba(184,32,46,0.5); text-transform: uppercase; margin-bottom: 14px; }
+  .fa-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .fa-pill {
+    font-family: 'EB Garamond', serif; font-size: 13px; color: rgba(240,232,216,0.45);
+    border: 1px solid rgba(184,32,46,0.18); padding: 7px 16px; cursor: pointer; background: none; transition: all 0.22s ease;
+  }
+  .fa-pill:hover { color: #F0E8D8; border-color: rgba(184,32,46,0.5); background: rgba(184,32,46,0.05); }
+  .fa-consult-btn {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px;
+    color: #F5EDD8; background: #B8202E; border: none; padding: 18px 52px;
+    cursor: pointer; text-transform: uppercase; transition: all 0.3s ease;
+    clip-path: polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%); align-self: flex-start;
+  }
+  .fa-consult-btn:hover:not(:disabled) { background: #8B1220; box-shadow: 0 10px 40px rgba(184,32,46,0.4); transform: translateY(-2px); }
+  .fa-consult-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* ── LOADING ───────────────────────────────────── */
+  .fa-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 48px; }
+  .fa-loading-portrait {
+    width: 128px; height: 128px; border-radius: 50%; object-fit: cover; object-position: top;
+    filter: grayscale(60%) sepia(30%); border: 1px solid rgba(184,32,46,0.35); margin-bottom: 44px;
+    animation: fa-breathe 2.2s ease-in-out infinite;
+  }
+  @keyframes fa-breathe { 0%, 100% { box-shadow: 0 0 0 0 rgba(184,32,46,0.15); opacity: 0.85; } 50% { box-shadow: 0 0 0 18px rgba(184,32,46,0); opacity: 1; } }
+  .fa-loading-name { font-family: 'Cinzel', serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 10px; }
+  .fa-loading-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 17px; color: rgba(240,232,216,0.45); margin-bottom: 56px; }
+  .fa-ink-bar {
+    width: 220px; height: 1px;
+    background: linear-gradient(to right, transparent, #B8202E 50%, transparent);
+    animation: fa-ink 2.2s ease-in-out infinite;
+  }
+  @keyframes fa-ink {
+    0%  { transform: scaleX(0); transform-origin: left; opacity: 0.8; }
+    48% { transform: scaleX(1); transform-origin: left; opacity: 1; }
+    50% { transform: scaleX(1); transform-origin: right; }
+    100%{ transform: scaleX(0); transform-origin: right; opacity: 0.8; }
+  }
+  .fa-dots { display: flex; gap: 7px; margin-top: 28px; }
+  .fa-dot { width: 5px; height: 5px; background: #B8202E; border-radius: 50%; animation: fa-dot-pulse 1.5s ease-in-out infinite; }
+  .fa-dot:nth-child(2) { animation-delay: 0.22s; }
+  .fa-dot:nth-child(3) { animation-delay: 0.44s; }
+  @keyframes fa-dot-pulse { 0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); } 40% { opacity: 1; transform: scale(1); } }
+
+  /* ── RESPONSE ──────────────────────────────────── */
+  .fa-response { display: grid; grid-template-columns: 310px 1fr; min-height: 100vh; }
+  .fa-resp-left { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  .fa-resp-img-wrap { flex: 1; position: relative; overflow: hidden; }
+  .fa-resp-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; filter: grayscale(50%) sepia(30%) contrast(1.18) brightness(0.6); }
+  .fa-resp-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 55%, #080C18 100%), linear-gradient(to bottom, transparent 45%, rgba(8,12,24,0.95) 100%);
+  }
+  .fa-resp-founder-label { position: absolute; bottom: 28px; left: 28px; right: 0; }
+  .fa-resp-fl-name { font-family: 'Cinzel', serif; font-size: 17px; font-weight: 600; color: #F5EDD8; margin-bottom: 5px; }
+  .fa-resp-fl-title { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: rgba(240,232,216,0.42); }
+  .fa-resp-right { padding: 72px 68px; overflow-y: auto; background: #080C18; display: flex; flex-direction: column; }
+  .fa-resp-q-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px; color: rgba(184,32,46,0.55); text-transform: uppercase; margin-bottom: 14px; }
+  .fa-resp-question { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px, 2vw, 23px); color: rgba(240,232,216,0.6); border-left: 2px solid rgba(184,32,46,0.4); padding-left: 22px; margin-bottom: 52px; line-height: 1.55; }
+  .fa-resp-rule { width: 72px; height: 1px; margin-bottom: 36px; }
+  .fa-resp-text { font-family: 'EB Garamond', serif; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.88; color: #F0E8D8; white-space: pre-wrap; flex: 1; }
+  .fa-cursor { display: inline-block; width: 2px; height: 0.9em; background: #B8202E; margin-left: 3px; vertical-align: middle; animation: fa-blink 0.75s step-end infinite; }
+  @keyframes fa-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .fa-sources { margin-top: 52px; padding-top: 36px; border-top: 1px solid rgba(184,32,46,0.15); }
+  .fa-sources-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 6px; color: #B8202E; text-transform: uppercase; margin-bottom: 24px; }
+  .fa-source-row { display: flex; gap: 18px; margin-bottom: 18px; align-items: flex-start; }
+  .fa-source-gem { width: 7px; height: 7px; flex-shrink: 0; margin-top: 7px; background: #B8202E; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+  .fa-source-txt { font-family: 'EB Garamond', serif; font-size: 15px; color: rgba(240,232,216,0.48); line-height: 1.65; }
+  .fa-source-txt strong { color: rgba(240,232,216,0.82); font-weight: 500; }
+
+  .fa-actions { display: flex; gap: 14px; margin-top: 52px; flex-wrap: wrap; align-items: center; }
+  .fa-act-primary { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px; color: #F5EDD8; background: #B8202E; border: none; padding: 15px 40px; cursor: pointer; text-transform: uppercase; transition: all 0.3s ease; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
+  .fa-act-primary:hover { background: #8B1220; box-shadow: 0 6px 28px rgba(184,32,46,0.4); }
+  .fa-act-secondary { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px; color: rgba(184,32,46,0.7); background: none; border: 1px solid rgba(184,32,46,0.3); padding: 15px 40px; cursor: pointer; text-transform: uppercase; transition: all 0.3s ease; }
+  .fa-act-secondary:hover { color: #B8202E; border-color: #B8202E; }
+
+  .fa-voice-btn { display: flex; align-items: center; gap: 10px; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; background: none; padding: 14px 20px; border: 1px solid rgba(184,32,46,0.25); color: rgba(184,32,46,0.65); transition: all 0.3s ease; }
+  .fa-voice-btn:hover, .fa-voice-btn.speaking { color: #B8202E; border-color: rgba(184,32,46,0.6); background: rgba(184,32,46,0.05); }
+  .fa-waveform { display: flex; align-items: center; gap: 2px; height: 18px; }
+  .fa-wave-bar { width: 3px; border-radius: 2px; animation: fa-wave 0.9s ease-in-out infinite; }
+  .fa-wave-bar:nth-child(1){animation-delay:0s;animation-duration:0.85s;}
+  .fa-wave-bar:nth-child(2){animation-delay:0.12s;animation-duration:0.75s;}
+  .fa-wave-bar:nth-child(3){animation-delay:0.24s;animation-duration:0.95s;}
+  .fa-wave-bar:nth-child(4){animation-delay:0.08s;animation-duration:0.80s;}
+  .fa-wave-bar:nth-child(5){animation-delay:0.18s;animation-duration:0.70s;}
+  @keyframes fa-wave { 0%, 100% { height: 3px; opacity: 0.4; } 50% { height: 18px; opacity: 1; } }
+  .fa-resp-img-wrap.fa-speaking::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(184,32,46,0.07) 0%, transparent 70%); animation: fa-glow-pulse 1.8s ease-in-out infinite; pointer-events: none; }
+  @keyframes fa-glow-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+  /* ── ANIMS ─────────────────────────────────────── */
+  @keyframes fa-fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fa-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ── LESSONS ───────────────────────────────────── */
+  .fa-lessons-hub {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 80px 40px; text-align: center;
+    background: linear-gradient(to bottom, rgba(8,12,24,0.2) 0%, rgba(8,12,24,0.96) 60%, #080C18 100%),
+      url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Constitution_of_the_United_States%2C_page_1.jpg/800px-Constitution_of_the_United_States%2C_page_1.jpg') center / cover no-repeat;
+  }
+  .fa-lessons-hub .fa-intro-eyebrow,.fa-lessons-hub .fa-intro-title,.fa-lessons-hub .fa-intro-subtitle,.fa-lessons-hub .fa-intro-rule,.fa-lessons-hub .fa-intro-desc { opacity: 1; animation: none; }
+  .fa-lessons-hub .fa-intro-title { font-size: clamp(36px,6vw,72px); }
+  .fa-track-cards { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; margin-top: 48px; }
+  .fa-track-card { width: 280px; padding: 40px 32px; cursor: pointer; border: 1px solid rgba(184,32,46,0.2); background: rgba(8,12,24,0.75); text-align: center; transition: all 0.35s ease; backdrop-filter: blur(4px); }
+  .fa-track-card:hover { border-color: rgba(184,32,46,0.6); background: rgba(184,32,46,0.07); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+  .fa-track-icon { font-size: 36px; margin-bottom: 20px; }
+  .fa-track-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 600; color: #F5EDD8; margin-bottom: 8px; }
+  .fa-track-count { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px; color: #B8202E; text-transform: uppercase; margin-bottom: 16px; }
+  .fa-track-desc { font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; color: rgba(240,232,216,0.55); line-height: 1.6; }
+  .fa-lesson-list { padding: 64px 48px 96px; max-width: 1400px; margin: 0 auto; }
+  .fa-doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .fa-doc-card { padding: 28px 28px 24px; cursor: pointer; border: 1px solid rgba(184,32,46,0.12); background: #0C1022; transition: all 0.3s ease; display: flex; flex-direction: column; gap: 10px; }
+  .fa-doc-card:hover { border-color: rgba(184,32,46,0.45); background: rgba(184,32,46,0.05); transform: translateY(-2px); }
+  .fa-doc-num { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 700; line-height: 1; }
+  .fa-doc-title { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: #F5EDD8; line-height: 1.3; }
+  .fa-doc-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px; color: rgba(240,232,216,0.45); }
+  .fa-doc-tagline { font-family: 'EB Garamond', serif; font-size: 14px; color: rgba(240,232,216,0.55); line-height: 1.55; margin-top: 4px; }
+  .fa-doc-author { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; color: rgba(184,32,46,0.55); text-transform: uppercase; margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(184,32,46,0.12); }
+  .fa-lesson-detail { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  .fa-lesson-sidebar { background: #090D1C; border-right: 1px solid rgba(184,32,46,0.12); padding: 48px 32px; display: flex; flex-direction: column; gap: 32px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .fa-lesson-sidebar-num { font-family: 'Cinzel', serif; font-size: 56px; font-weight: 900; line-height: 1; }
+  .fa-lesson-sidebar-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: #F5EDD8; line-height: 1.3; }
+  .fa-lesson-sidebar-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: rgba(240,232,216,0.4); margin-top: 6px; }
+  .fa-lesson-sidebar-theme { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; margin-top: 12px; }
+  .fa-lesson-sidebar-tagline { font-family: 'EB Garamond', serif; font-size: 14px; color: rgba(240,232,216,0.5); line-height: 1.6; margin-top: 8px; }
+  .fa-sidebar-ask-btn { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #F5EDD8; background: #B8202E; border: none; padding: 12px 20px; cursor: pointer; transition: all 0.3s; margin-top: auto; clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%); }
+  .fa-sidebar-ask-btn:hover { background: #8B1220; }
+  .fa-lesson-content { padding: 64px 72px; overflow-y: auto; }
+  .fa-lesson-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 24px; }
+  .fa-lesson-loading-text { font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; color: rgba(240,232,216,0.4); }
+  .fa-lesson-body { font-family: 'EB Garamond', serif; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.9; color: #F0E8D8; }
+  .fa-lesson-body h2 { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: #B8202E; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(184,32,46,0.18); }
+  .fa-lesson-body h2:first-child { margin-top: 0; }
+  .fa-lesson-body p { margin-bottom: 18px; }
+  .fa-lesson-body ol { padding-left: 28px; margin-bottom: 18px; }
+  .fa-lesson-body ol li { margin-bottom: 14px; }
+  .fa-lesson-body strong { color: #F5EDD8; font-weight: 600; }
+  .fa-test-box { margin-top: 48px; padding: 32px 36px; border: 1px solid rgba(184,32,46,0.3); background: rgba(184,32,46,0.04); }
+  .fa-test-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: #B8202E; margin-bottom: 16px; }
+  .fa-test-q { font-family: 'Playfair Display', serif; font-style: italic; font-size: 19px; color: rgba(240,232,216,0.8); line-height: 1.6; }
+
+  .fa-nav { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+  .fa-nav-btn { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; background: none; border: 1px solid rgba(184,32,46,0.28); color: rgba(184,32,46,0.65); padding: 10px 24px; cursor: pointer; transition: all 0.25s ease; }
+  .fa-nav-btn:hover, .fa-nav-btn.active { color: #B8202E; border-color: rgba(184,32,46,0.65); background: rgba(184,32,46,0.05); }
+
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 860px) {
+    .fa-question,.fa-response,.fa-lesson-detail { grid-template-columns: 1fr; }
+    .fa-q-left,.fa-resp-left,.fa-lesson-sidebar { display: none; }
+    .fa-q-right,.fa-resp-right { padding: 48px 28px; }
+    .fa-select,.fa-lesson-list { padding: 48px 20px; }
+    .fa-lesson-content { padding: 40px 24px; }
+    .fa-anniversary-banner { flex-direction: column; gap: 10px; }
+  }
+`;
+
+function FoundersApp() {
+  const [screen, setScreen] = useState("intro");
+  const [founder, setFounder] = useState(null);
+  const [question, setQuestion] = useState("");
+  const [response, setResponse] = useState("");
+  const [sources, setSources] = useState([]);
+  const [displayed, setDisplayed] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [imgErr, setImgErr] = useState({});
+  const [speaking, setSpeaking] = useState(false);
+  const [speechSupported] = useState(() => typeof window !== "undefined" && "speechSynthesis" in window);
+  const utteranceRef = useRef(null);
+  const audioCtxRef  = useRef(null);
+  const sourceRef    = useRef(null);
+  const [lessonTrack, setLessonTrack]     = useState(null);
+  const [selectedDoc, setSelectedDoc]     = useState(null);
+  const [lessonContent, setLessonContent] = useState("");
+  const [lessonLoading, setLessonLoading] = useState(false);
+
+  // 250th Anniversary countdown — July 4, 2026
+  const [cd, setCd] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  useEffect(() => {
+    const target = new Date("2026-07-04T00:00:00");
+    const tick = () => {
+      const diff = target - new Date();
+      if (diff <= 0) return;
+      setCd({
+        days:    Math.floor(diff / 86400000),
+        hours:   Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000)  / 60000),
+        seconds: Math.floor((diff % 60000)    / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const fetchLesson = async (doc, track) => {
+    setSelectedDoc(doc); setLessonContent(""); setLessonLoading(true); setScreen("lesson-detail");
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system: getLessonPrompt(doc, track),
+          messages: [{ role: "user", content: "Please teach this document now." }]
+        })
+      });
+      const data = await res.json();
+      setLessonContent(data.content?.[0]?.text || "Unable to load lesson. Please try again.");
+    } catch { setLessonContent("Unable to load lesson. Please try again."); }
+    finally { setLessonLoading(false); }
+  };
+
+  // Parse lesson markdown-ish content into JSX
+  const renderLesson = (text) => {
+    if (!text) return null;
+    const lines = text.split("\n");
+    const elements = [];
+    let olItems = [];
+    const flushOl = () => {
+      if (olItems.length) { elements.push(<ol key={`ol-${elements.length}`}>{olItems}</ol>); olItems = []; }
+    };
+    lines.forEach((line, i) => {
+      const boldHeader = line.match(/^\*\*(.+?)\*\*$/);
+      const numberedItem = line.match(/^(\d+)\.\s+\*\*(.+?)\*\*(.*)$/);
+      const plain = line.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>");
+      if (boldHeader) {
+        flushOl();
+        elements.push(<h2 key={i}>{boldHeader[1]}</h2>);
+      } else if (numberedItem) {
+        const label = numberedItem[2]; const rest = numberedItem[3];
+        olItems.push(<li key={i}><strong>{label}</strong><span dangerouslySetInnerHTML={{ __html: rest.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\*(.+?)\*/g,"<em>$1</em>") }} /></li>);
+      } else if (line.trim()) {
+        flushOl();
+        elements.push(<p key={i} dangerouslySetInnerHTML={{ __html: plain }} />);
+      }
+    });
+    flushOl();
+    return elements;
+  };
+
+  const loadVoices = () => new Promise(resolve => {
+    const v = window.speechSynthesis.getVoices();
+    if (v.length > 0) return resolve(v);
+    window.speechSynthesis.onvoiceschanged = () => resolve(window.speechSynthesis.getVoices());
+    setTimeout(() => resolve(window.speechSynthesis.getVoices()), 1500);
+  });
+
+  const speakWithBrowser = async (text) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utteranceRef.current = utt;
+    const voicePref = founder?.voice;
+    if (voicePref) {
+      utt.rate = voicePref.rate; utt.pitch = voicePref.pitch; utt.volume = 1;
+      const voices = await loadVoices();
+      let picked = null;
+      for (const name of voicePref.voiceName) {
+        picked = voices.find(v => v.name.toLowerCase().includes(name.toLowerCase()));
+        if (picked) break;
+      }
+      if (!picked) picked = voices.find(v => v.lang.startsWith("en-")) || voices[0];
+      if (picked) utt.voice = picked;
+    }
+    utt.onstart = () => setSpeaking(true);
+    utt.onend   = () => setSpeaking(false);
+    utt.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(utt);
+  };
+
+  const speakWithAzure = async (text) => {
+    const av = founder?.azureVoice;
+    if (!av) return speakWithBrowser(text);
+
+    // Build SSML with per-Founder voice shaping
+    const ssml = `<speak version='1.0' xml:lang='en-US'>
+      <voice name='${av.name}'>
+        <prosody rate='${av.rate}' pitch='${av.pitch}'>
+          ${text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+        </prosody>
+      </voice>
+    </speak>`;
+
+    try {
+      const res = await fetch(AZURE_URL, {
+        method: "POST",
+        headers: {
+          "Ocp-Apim-Subscription-Key": AZURE_KEY,
+          "Content-Type": "application/ssml+xml",
+          "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
+          "User-Agent": "VoicesOfTheRepublic"
+        },
+        body: ssml
+      });
+
+      if (!res.ok) throw new Error(`Azure TTS error: ${res.status}`);
+
+      const arrayBuffer = await res.arrayBuffer();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const decoded  = await audioCtx.decodeAudioData(arrayBuffer);
+      const source   = audioCtx.createBufferSource();
+      source.buffer  = decoded;
+      source.connect(audioCtx.destination);
+      audioCtxRef.current = audioCtx;
+      sourceRef.current   = source;
+      setSpeaking(true);
+      source.start(0);
+      source.onended = () => { setSpeaking(false); audioCtx.close(); };
+    } catch (err) {
+      console.warn("Azure TTS failed, falling back to browser:", err);
+      speakWithBrowser(text);
+    }
+  };
+
+  const speakResponse = async () => {
+    if (!response) return;
+    const azureReady = AZURE_KEY !== "YOUR_AZURE_KEY_HERE" && AZURE_REGION !== "YOUR_REGION_HERE";
+    if (azureReady) {
+      await speakWithAzure(response);
+    } else {
+      await speakWithBrowser(response);
+    }
+  };
+
+  const stopSpeaking = () => {
+    // Stop Azure audio
+    try { sourceRef.current?.stop(); } catch {}
+    try { audioCtxRef.current?.close(); } catch {}
+    // Stop browser TTS
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeaking(false);
+  };
+
+  // Stop speech when leaving response screen
+  useEffect(() => {
+    if (screen !== "response") stopSpeaking();
+  }, [screen]);
+
+  // Inject CSS + fonts
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = APP_CSS;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  // Typewriter effect
+  useEffect(() => {
+    if (!response || screen !== "response") return;
+    setDisplayed(""); setTyping(true);
+    let i = 0;
+    const tick = setInterval(() => {
+      if (i < response.length) { setDisplayed(response.slice(0, i + 3)); i += 3; }
+      else { setTyping(false); clearInterval(tick); }
+    }, 12);
+    return () => clearInterval(tick);
+  }, [response, screen]);
+
+  const fallback = (f) =>
+    `https://placehold.co/400x600/100C09/C9A84C?text=${encodeURIComponent(f.name.split(" ").pop())}`;
+
+  const img = (f) => (imgErr[f.id] ? fallback(f) : f.portrait);
+  const onImgErr = (id) => setImgErr(p => ({ ...p, [id]: true }));
+
+  const askFounder = async () => {
+    if (!question.trim() || !founder) return;
+    setScreen("loading"); setDisplayed(""); setResponse(""); setSources([]);
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system: getSystemPrompt(founder),
+          messages: [{ role: "user", content: question }]
+        })
+      });
+      const data = await res.json();
+      const full = data.content?.[0]?.text || "";
+      const [body, tail] = full.split("---SOURCES---");
+      const parsed = (tail || "").split("\n").filter(l => l.trim().startsWith("•")).map(l => l.replace(/^•\s*/, "").trim());
+      setResponse(body.trim()); setSources(parsed); setScreen("response");
+    } catch {
+      setResponse("The courier has been delayed by inclement weather. Pray, attempt your query once more.");
+      setSources([]); setScreen("response");
+    }
+  };
+
+  const renderSource = (src, i) => {
+    const dash = src.indexOf(" — ");
+    const title = dash > -1 ? src.slice(0, dash) : src;
+    const desc = dash > -1 ? src.slice(dash + 3) : "";
+    return (
+      <div key={i} className="fa-source-row">
+        <div className="fa-source-gem" />
+        <div className="fa-source-txt">
+          <strong>{title}</strong>{desc ? ` — ${desc}` : ""}
+        </div>
+      </div>
+    );
+  };
+
+  // ── INTRO ──────────────────────────────────
+  if (screen === "intro") return (
+    <div className="fa-app">
+      <div className="fa-grain" />
+      <div className="fa-vignette" />
+      <div className="fa-anniversary-banner">
+        <span className="fa-banner-stars">★ ★ ★</span>
+        <span className="fa-banner-text">America's 250th Anniversary · July 4, 2026</span>
+        <div className="fa-countdown">
+          <div className="fa-cd-unit"><span className="fa-cd-num">{cd.days}</span><span className="fa-cd-label">Days</span></div>
+          <span className="fa-cd-sep">:</span>
+          <div className="fa-cd-unit"><span className="fa-cd-num">{String(cd.hours).padStart(2,"0")}</span><span className="fa-cd-label">Hrs</span></div>
+          <span className="fa-cd-sep">:</span>
+          <div className="fa-cd-unit"><span className="fa-cd-num">{String(cd.minutes).padStart(2,"0")}</span><span className="fa-cd-label">Min</span></div>
+          <span className="fa-cd-sep">:</span>
+          <div className="fa-cd-unit"><span className="fa-cd-num">{String(cd.seconds).padStart(2,"0")}</span><span className="fa-cd-label">Sec</span></div>
+        </div>
+        <span className="fa-banner-stars">★ ★ ★</span>
+      </div>
+      <div className="fa-screen fa-intro">
+        <div className="fa-intro-eyebrow">A Primary Sources Experience</div>
+        <div className="fa-intro-title">Voices of<br />the Republic</div>
+        <div className="fa-intro-subtitle">The Founding Fathers on the Modern Age</div>
+        <div className="fa-intro-rule" />
+        <div className="fa-intro-desc">
+          Consult the architects of American democracy on the pressing questions of our time —
+          every response grounded in their actual letters, Federalist Papers, speeches,
+          and documented philosophy. Not roleplay. Primary sources.
+        </div>
+        <button className="fa-enter-btn" onClick={() => setScreen("select")}>
+          Ask a Founder
+        </button>
+        <button
+          onClick={() => setScreen("lessons")}
+          style={{
+            marginTop: 16,
+            fontFamily: "'Cinzel', serif", fontSize: 11, letterSpacing: 5,
+            color: "rgba(240,232,216,0.7)", background: "none",
+            border: "1px solid rgba(240,232,216,0.25)", padding: "16px 52px",
+            cursor: "pointer", textTransform: "uppercase", transition: "all 0.3s",
+            opacity: 0, animation: "fa-fadeUp 0.8s ease forwards 2.1s",
+            clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)"
+          }}
+          onMouseEnter={e => { e.target.style.color="#F5EDD8"; e.target.style.borderColor="rgba(240,232,216,0.6)"; }}
+          onMouseLeave={e => { e.target.style.color="rgba(240,232,216,0.7)"; e.target.style.borderColor="rgba(240,232,216,0.25)"; }}
+        >
+          📜 Explore the Documents
+        </button>
+      </div>
+    </div>
+  );
+
+  // ── SELECT ─────────────────────────────────
+  if (screen === "select") return (
+    <div className="fa-app">
+      <div className="fa-grain" />
+      <div className="fa-vignette" />
+      <div className="fa-screen fa-select">
+        <div className="fa-section-hd">
+          <div className="fa-eyebrow">Voices of the Republic</div>
+          <div className="fa-section-title">The Founding Fathers</div>
+          <div className="fa-section-sub">Responses drawn exclusively from primary historical sources</div>
+          <div className="fa-nav" style={{marginTop: 28, gap: 0, borderBottom: "1px solid rgba(184,32,46,0.2)"}}>
+            <button className="fa-nav-btn active" style={{
+              borderBottom: "3px solid #B8202E", borderTop:"none", borderLeft:"none", borderRight:"none",
+              borderRadius:0, padding: "14px 36px", fontSize: 10, color: "#B8202E"
+            }}>⚔ Ask a Founder</button>
+            <button className="fa-nav-btn" style={{
+              borderBottom: "3px solid transparent", borderTop:"none", borderLeft:"none", borderRight:"none",
+              borderRadius:0, padding: "14px 36px", fontSize: 10
+            }} onClick={() => setScreen("lessons")}>📜 Lessons & Documents</button>
+          </div>
+        </div>
+        <div className="fa-grid">
+          {FOUNDERS.map(f => (
+            <div key={f.id} className="fa-card" onClick={() => { setFounder(f); setScreen("question"); }}>
+              <div className="fa-card-img-wrap">
+                <img className="fa-card-img" src={img(f)} alt={f.name} onError={() => onImgErr(f.id)} />
+                <div className="fa-card-grad" />
+                <div className="fa-card-overlay"><div className="fa-card-cta">Consult</div></div>
+              </div>
+              <div className="fa-card-info">
+                <div className="fa-card-years">{f.lifespan}</div>
+                <div className="fa-card-name">{f.name}</div>
+                <div className="fa-card-role">{f.title}</div>
+                <div className="fa-card-tagline" style={{ color: f.accent }}>{f.tagline}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── QUESTION ───────────────────────────────
+  if (screen === "question" && founder) return (
+    <div className="fa-app">
+      <div className="fa-grain" />
+      <div className="fa-vignette" />
+      <div className="fa-screen fa-question">
+        <div className="fa-q-left">
+          <img className="fa-q-left-img" src={img(founder)} alt={founder.name} onError={() => onImgErr(founder.id)} />
+          <div className="fa-q-left-overlay" />
+          <div className="fa-q-left-content">
+            <div className="fa-q-eyebrow">You are consulting</div>
+            <div className="fa-q-name">{founder.name}</div>
+            <div className="fa-q-title">{founder.title}</div>
+            <div className="fa-q-quote-block" style={{ borderColor: founder.accent + "88" }}>
+              <div className="fa-q-quote">"{founder.quote}"</div>
+              <div className="fa-q-quote-src" style={{ color: founder.accent }}>— {founder.quoteSource}</div>
+            </div>
+          </div>
+        </div>
+        <div className="fa-q-right">
+          <button className="fa-back-btn" onClick={() => setScreen("select")}>← Choose Another Founder</button>
+          <div className="fa-q-prompt">Pose Your Question</div>
+          <div className="fa-q-sub">
+            Ask {founder.name.split(" ")[0]} about any matter of governance,
+            liberty, technology, or modern civic life.
+          </div>
+          <textarea
+            className="fa-textarea"
+            placeholder={`What does ${founder.name.split(" ")[0]} counsel on...`}
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            rows={5}
+          />
+          <div className="fa-suggest-label">Suggested Questions</div>
+          <div className="fa-pills">
+            {SUGGESTIONS.map((s, i) => (
+              <button key={i} className="fa-pill" onClick={() => setQuestion(s)}>{s}</button>
+            ))}
+          </div>
+          <button className="fa-consult-btn" onClick={askFounder} disabled={!question.trim()}>
+            Seek Counsel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── LOADING ────────────────────────────────
+  if (screen === "loading" && founder) return (
+    <div className="fa-app">
+      <div className="fa-grain" />
+      <div className="fa-vignette" />
+      <div className="fa-screen fa-loading">
+        <img className="fa-loading-portrait" src={img(founder)} alt={founder.name} onError={() => onImgErr(founder.id)} />
+        <div className="fa-loading-name" style={{ color: founder.accent }}>{founder.name}</div>
+        <div className="fa-loading-sub">is consulting the historical record...</div>
+        <div className="fa-ink-bar" />
+        <div className="fa-dots">
+          <div className="fa-dot" /><div className="fa-dot" /><div className="fa-dot" />
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── RESPONSE ───────────────────────────────
+  if (screen === "response" && founder) return (
+    <div className="fa-app">
+      <div className="fa-grain" />
+      <div className="fa-vignette" />
+      <div className="fa-screen fa-response">
+        <div className="fa-resp-left">
+          <div className={`fa-resp-img-wrap${speaking ? " fa-speaking" : ""}`}>
+            <img className="fa-resp-img" src={img(founder)} alt={founder.name} onError={() => onImgErr(founder.id)} />
+            <div className="fa-resp-img-overlay" />
+            <div className="fa-resp-founder-label">
+              <div className="fa-resp-fl-name">{founder.name}</div>
+              <div className="fa-resp-fl-title">{founder.title}</div>
+            </div>
+          </div>
+        </div>
+        <div className="fa-resp-right">
+          <div className="fa-resp-q-label">Your Question</div>
+          <div className="fa-resp-question">"{question}"</div>
+          <div className="fa-resp-rule" style={{ background: `linear-gradient(to right, ${founder.accent}, transparent)` }} />
+          <div className="fa-resp-text">
+            {displayed}
+            {typing && <span className="fa-cursor" />}
+          </div>
+          {!typing && sources.length > 0 && (
+            <div className="fa-sources">
+              <div className="fa-sources-label">Primary Sources Consulted</div>
+              {sources.map((s, i) => renderSource(s, i))}
+            </div>
+          )}
+          {!typing && (
+            <div className="fa-actions">
+              {speechSupported && (
+                speaking ? (
+                  <button className="fa-voice-btn speaking" onClick={stopSpeaking}>
+                    <div className="fa-waveform">
+                      {[1,2,3,4,5].map(n => (
+                        <div key={n} className="fa-wave-bar" style={{ background: founder.accent }} />
+                      ))}
+                    </div>
+                    Stop
+                  </button>
+                ) : (
+                  <button className="fa-voice-btn" onClick={speakResponse} style={{ borderColor: `${founder.accent}44`, color: `${founder.accent}99` }}>
+                    ♪ Hear Their Voice
+                  </button>
+                )
+              )}
+              <button className="fa-act-primary"
+                onClick={() => { stopSpeaking(); setQuestion(""); setResponse(""); setSources([]); setScreen("select"); }}>
+                Consult Another Founder
+              </button>
+              <button className="fa-act-secondary"
+                onClick={() => { stopSpeaking(); setResponse(""); setDisplayed(""); setSources([]); setScreen("question"); }}>
+                Ask Again
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── LESSONS HUB ───────────────────────────────
+  if (screen === "lessons") return (
+    <div className="fa-app">
+      <div className="fa-grain" /><div className="fa-vignette" />
+      <div className="fa-screen fa-lessons-hub">
+        <div className="fa-intro-eyebrow">Primary Sources Education</div>
+        <div className="fa-intro-title" style={{fontSize:"clamp(36px,6vw,72px)"}}>The Library</div>
+        <div className="fa-intro-subtitle">Federalist Papers & The Constitution</div>
+        <div className="fa-intro-rule" />
+        <div className="fa-intro-desc" style={{opacity:1,animation:"none"}}>
+          Each lesson is AI-powered and grounded in the original text — plain English explanation,
+          historical context, and why it shapes American life today.
+        </div>
+        <div style={{display:"flex", gap:0, borderBottom:"1px solid rgba(184,32,46,0.2)", marginBottom: 40}}>
+          <button className="fa-nav-btn" style={{borderBottom:"3px solid transparent",borderTop:"none",borderLeft:"none",borderRight:"none",borderRadius:0,padding:"14px 36px",fontSize:10}}
+            onClick={() => setScreen("select")}>⚔ Ask a Founder</button>
+          <button className="fa-nav-btn active" style={{borderBottom:"3px solid #B8202E",borderTop:"none",borderLeft:"none",borderRight:"none",borderRadius:0,padding:"14px 36px",fontSize:10,color:"#B8202E"}}>📜 Lessons & Documents</button>
+        </div>
+        <div className="fa-track-cards">
+          <div className="fa-track-card" onClick={() => { setLessonTrack("federalist"); setScreen("lesson-list"); }}>
+            <div className="fa-track-icon">📜</div>
+            <div className="fa-track-title">The Federalist Papers</div>
+            <div className="fa-track-count">{FEDERALIST_PAPERS.length} Key Papers</div>
+            <div className="fa-track-desc">Hamilton, Madison & Jay's arguments for ratifying the Constitution — the greatest collection of political philosophy in American history.</div>
+          </div>
+          <div className="fa-track-card" onClick={() => { setLessonTrack("constitution"); setScreen("lesson-list"); }}>
+            <div className="fa-track-icon">⚖️</div>
+            <div className="fa-track-title">The Constitution</div>
+            <div className="fa-track-count">{CONSTITUTION_DOCS.length} Articles & Amendments</div>
+            <div className="fa-track-desc">All seven Articles and the key Amendments — from the Bill of Rights to the 25th Amendment — decoded in plain English.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── LESSON LIST ────────────────────────────────
+  if (screen === "lesson-list") {
+    const docs = lessonTrack === "federalist" ? FEDERALIST_PAPERS : CONSTITUTION_DOCS;
+    const trackLabel = lessonTrack === "federalist" ? "The Federalist Papers" : "The Constitution";
+    return (
+      <div className="fa-app">
+        <div className="fa-grain" /><div className="fa-vignette" />
+        <div className="fa-screen fa-lesson-list">
+          <div className="fa-section-hd" style={{marginBottom:48}}>
+            <button className="fa-back-btn" style={{display:"block",margin:"0 auto 24px"}} onClick={() => setScreen("lessons")}>← Back to Library</button>
+            <div className="fa-eyebrow">Primary Sources Education</div>
+            <div className="fa-section-title">{trackLabel}</div>
+            <div className="fa-section-sub">Select a document to begin your lesson</div>
+          </div>
+          <div className="fa-doc-grid">
+            {docs.map((doc, i) => (
+              <div key={doc.id || doc.num} className="fa-doc-card" onClick={() => fetchLesson(doc, lessonTrack)}>
+                <div className="fa-doc-num" style={{color: lessonTrack === "federalist" ? "rgba(201,168,76,0.3)" : "rgba(155,123,196,0.3)"}}>
+                  {lessonTrack === "federalist" ? `No. ${doc.num}` : doc.num}
+                </div>
+                <div className="fa-doc-title">{lessonTrack === "federalist" ? doc.theme : doc.title}</div>
+                {doc.subtitle && <div className="fa-doc-sub">{doc.subtitle}</div>}
+                <div className="fa-doc-tagline">{doc.tagline}</div>
+                <div className="fa-doc-author" style={{color: lessonTrack === "federalist" ? "rgba(201,168,76,0.5)" : "rgba(155,123,196,0.5)"}}>
+                  {lessonTrack === "federalist" ? `${doc.author} · ${doc.date}` : doc.type === "article" ? "Original Constitution, 1787" : "Bill of Rights / Amendment"}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── LESSON DETAIL ──────────────────────────────
+  if (screen === "lesson-detail" && selectedDoc) {
+    const isFedralist = lessonTrack === "federalist";
+    const accent = isFedralist ? "#C9A84C" : "#9B7BC4";
+    const docNum = isFedralist ? `No. ${selectedDoc.num}` : selectedDoc.num;
+    const docTitle = isFedralist ? selectedDoc.theme : selectedDoc.title;
+    const docSub = isFedralist ? `by ${selectedDoc.author} · ${selectedDoc.date}` : selectedDoc.subtitle;
+
+    // Split test question from body
+    const testMatch = lessonContent.split(/\*\*TEST YOURSELF\*\*/i);
+    const bodyText = testMatch[0] || lessonContent;
+    const testText = testMatch[1]?.trim().replace(/^\n+/, "") || "";
+
+    return (
+      <div className="fa-app">
+        <div className="fa-grain" /><div className="fa-vignette" />
+        <div className="fa-screen fa-lesson-detail">
+          <div className="fa-lesson-sidebar">
+            <button className="fa-back-btn" style={{padding:0}} onClick={() => setScreen("lesson-list")}>← All Documents</button>
+            <div>
+              <div className="fa-lesson-sidebar-num" style={{color: `${accent}25`}}>{docNum}</div>
+              <div className="fa-lesson-sidebar-title">{docTitle}</div>
+              <div className="fa-lesson-sidebar-sub">{docSub}</div>
+              {isFedralist && <div className="fa-lesson-sidebar-theme" style={{color: accent}}>{selectedDoc.theme}</div>}
+              <div className="fa-lesson-sidebar-tagline">{selectedDoc.tagline}</div>
+            </div>
+            {!lessonLoading && (
+              <button className="fa-sidebar-ask-btn" onClick={() => {
+                if (isFedralist) {
+                  const authorFounder = FOUNDERS.find(f => f.name.includes(selectedDoc.author)) || FOUNDERS[0];
+                  setFounder(authorFounder);
+                  setQuestion(`Tell me more about your arguments in Federalist No. ${selectedDoc.num} — "${selectedDoc.theme}" — and how they apply today.`);
+                  setScreen("question");
+                } else {
+                  setFounder(FOUNDERS[4]); // Washington as default
+                  setQuestion(`What is your view on ${selectedDoc.title}: ${selectedDoc.subtitle}?`);
+                  setScreen("question");
+                }
+              }}>
+                Ask a Founder About This
+              </button>
+            )}
+          </div>
+          <div className="fa-lesson-content">
+            {lessonLoading ? (
+              <div className="fa-lesson-loading">
+                <div className="fa-ink-bar" style={{background:`linear-gradient(to right, transparent, ${accent} 50%, transparent)`}} />
+                <div className="fa-lesson-loading-text">Preparing your lesson...</div>
+                <div className="fa-dots">
+                  <div className="fa-dot" style={{background:accent}} />
+                  <div className="fa-dot" style={{background:accent}} />
+                  <div className="fa-dot" style={{background:accent}} />
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="fa-lesson-body" style={{"--accent": accent}}>
+                  {renderLesson(bodyText)}
+                </div>
+                {testText && (
+                  <div className="fa-test-box" style={{borderColor:`${accent}40`}}>
+                    <div className="fa-test-label" style={{color: accent}}>Test Yourself</div>
+                    <div className="fa-test-q">{testText.replace(/\*\*/g,"")}</div>
+                  </div>
+                )}
+                <div className="fa-actions" style={{marginTop:40}}>
+                  <button className="fa-act-secondary" onClick={() => setScreen("lesson-list")}>← Back to List</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('react-root'));
+root.render(React.createElement(FoundersApp));
+</script>
+
+<script>
+// ── GATE LOGIC ─────────────────────────────────────────────────────────────
+
+const TOKEN_KEY = 'votr_access_token';
+
+// Countdown
+function tickGate() {
+  const target = new Date("2026-07-04T23:59:59");
+  const diff   = target - new Date();
+  if (diff <= 0) return;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000)  / 60000);
+  const s = Math.floor((diff % 60000)    / 1000);
+  const el = id => document.getElementById(id);
+  if(el('gcd-d')) el('gcd-d').textContent = d;
+  if(el('gcd-h')) el('gcd-h').textContent = String(h).padStart(2,"0");
+  if(el('gcd-m')) el('gcd-m').textContent = String(m).padStart(2,"0");
+  if(el('gcd-s')) el('gcd-s').textContent = String(s).padStart(2,"0");
+}
+tickGate();
+setInterval(tickGate, 1000);
+
+// Check URL token param
+function getUrlToken() {
+  return new URLSearchParams(window.location.search).get('token');
+}
+
+async function verifyToken(token) {
+  try {
+    const res  = await fetch('/api/verify-token', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    return data; // return full object, not just data.valid
+  } catch { return { valid: false }; }
+}
+
+async function checkAccess() {
+  // 1. Check URL token (from email link)
+  const urlToken = getUrlToken();
+  if (urlToken) {
+    const data = await verifyToken(urlToken);
+    if (data && data.valid) { localStorage.setItem(TOKEN_KEY, urlToken); grantAccess(data.expiresAt); return; }
+  }
+  // 2. Check stored token
+  const stored = localStorage.getItem(TOKEN_KEY);
+  if (stored) {
+    const data = await verifyToken(stored);
+    if (data && data.valid) { grantAccess(data.expiresAt); return; }
+    // Check if trial expired
+    if (data && data.trialExpired) {
+      localStorage.removeItem(TOKEN_KEY);
+      showTrialExpiredGate(data.email);
+      return;
+    }
+    localStorage.removeItem(TOKEN_KEY);
+  }
+  // 3. Show gate — check if free or paid mode
+  try {
+    const res  = await fetch('/api/access-mode');
+    const data = await res.json();
+    if (data.paidWallActive) {
+      // Show paid gate
+      document.getElementById('gate-free-content').style.display = 'none';
+      document.getElementById('gate-paid-content').style.display = 'block';
+      document.getElementById('gate-badge') && (document.getElementById('gate-badge').style.display = 'none');
+      document.getElementById('gate-cd') && (document.getElementById('gate-cd').style.display = 'none');
+    }
+  } catch {}
+}
+
+function grantAccess(expiresAt) {
+  document.getElementById('app-gate').classList.add('hidden');
+  if (getUrlToken()) window.history.replaceState({}, '', '/app');
+  // Show trial expiry banner if applicable
+  if (expiresAt) {
+    const exp = new Date(expiresAt);
+    const now = new Date();
+    const daysLeft = Math.ceil((exp - now) / 86400000);
+    if (daysLeft <= 3 && daysLeft > 0) {
+      const banner = document.createElement('div');
+      banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99998;background:#8B0D14;color:#fff;font-family:Cinzel,serif;font-size:11px;letter-spacing:4px;text-align:center;padding:12px;text-transform:uppercase';
+      banner.innerHTML = `★ Your free trial expires in ${daysLeft} day${daysLeft>1?'s':''} — <a href="/app" onclick="showPayGate(event)" style="color:#C9A84C;text-decoration:underline">Get Lifetime Access — $9.99</a> ★`;
+      document.body.prepend(banner);
+    }
+  }
+}
+
+function showTrialExpiredGate(email) {
+  document.getElementById('gate-free-content').style.display = 'none';
+  document.getElementById('gate-paid-content').style.display = 'block';
+  if (email) document.getElementById('gate-email-paid').value = email;
+  document.querySelector('.gate-subtitle').textContent = 'Your Free Trial Has Ended';
+  document.querySelector('.gate-rule').style.background = 'linear-gradient(to right, transparent, #C9A84C, transparent)';
+}
+
+function showPayGate(e) {
+  e && e.preventDefault();
+  document.getElementById('gate-free-content').style.display = 'none';
+  document.getElementById('gate-paid-content').style.display = 'block';
+  document.getElementById('app-gate').classList.remove('hidden');
+}
+
+async function handleRegister() {
+  const name  = document.getElementById('gate-name').value.trim();
+  const email = document.getElementById('gate-email').value.trim();
+  const err   = document.getElementById('gate-err');
+  const btn   = document.getElementById('gate-submit');
+  const loading = document.getElementById('gate-loading');
+  const form  = document.getElementById('register-form');
+
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email address.'; return; }
+  err.textContent = '';
+  btn.disabled = true;
+  form.style.display = 'none';
+  loading.style.display = 'block';
+
+  try {
+    const res  = await fetch('/api/register', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name, email })
+    });
+    const data = await res.json();
+    if (data.success && data.token) {
+      localStorage.setItem(TOKEN_KEY, data.token);
+      grantAccess(data.expiresAt);
+    } else {
+      loading.style.display = 'none';
+      form.style.display = 'flex';
+      btn.disabled = false;
+      err.textContent = data.error || 'Registration failed. Please try again.';
+    }
+  } catch {
+    loading.style.display = 'none';
+    form.style.display = 'flex';
+    btn.disabled = false;
+    err.textContent = 'Connection error. Please try again.';
+  }
+}
+
+async function handlePayment() {
+  const email = document.getElementById('gate-email-paid').value.trim();
+  const err   = document.getElementById('gate-err-paid');
+  const btn   = document.getElementById('gate-pay-btn');
+  err.textContent = '';
+  btn.disabled = true; btn.textContent = 'Redirecting to checkout...';
+  try {
+    const res  = await fetch('/api/checkout', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (data.url) { window.location.href = data.url; }
+    else { err.textContent = data.error || 'Payment failed. Please try again.'; btn.disabled = false; btn.textContent = '🇺🇸  Get Lifetime Access — $9.99'; }
+  } catch {
+    err.textContent = 'Connection error. Please try again.';
+    btn.disabled = false; btn.textContent = '🇺🇸  Get Lifetime Access — $9.99';
+  }
+}
+
+// Initialize
+checkAccess();
+</script>
+</body>
+</html>
